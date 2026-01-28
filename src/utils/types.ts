@@ -38,3 +38,11 @@ export type TUser = {
 };
 
 export type TTabMode = 'bun' | 'sauce' | 'main';
+
+//! vvk --------------------------------------------------------------
+
+export interface IngredientsState {
+  ingredients: TIngredient[];
+  loading: boolean;
+  error: string | null;
+}

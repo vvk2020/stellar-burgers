@@ -3,12 +3,50 @@ import { useInView } from 'react-intersection-observer';
 
 import { TTabMode } from '@utils-types';
 import { BurgerIngredientsUI } from '../ui/burger-ingredients';
+import { useDispatch, useSelector } from 'src/services/store';
+import { fetchIngredients } from 'src/services/slices/ingredientsSlice';
+import { useIngredientsByType } from 'src/services/hooks/useIngredientsByType';
+import { Preloader } from '@ui';
 
 export const BurgerIngredients: FC = () => {
+  // const dispatch = useDispatch();
+
+  const { ingredients, loading } = useSelector((state) => state.ingredients);
+
+  // useEffect(() => {
+  //   console.log('777');
+
+  //   dispatch(fetchIngredients());
+  // }, [dispatch]);
+
+  // console.log(loading, ingredients);
+
+  // Ингредиенты по типам
+  const buns = useIngredientsByType('bun');
+  const mains = useIngredientsByType('main');
+  const sauces = useIngredientsByType('sauce');
+
+  // Фильтрация ингредиентов по типам
+  // const { buns, mains, sauces } = useMemo(() => {
+  //   const buns = ingredients.filter((item: TIngredient) => item.type === 'bun');
+  //   const mains = ingredients.filter(
+  //     (item: TIngredient) => item.type === 'main'
+  //   );
+  //   const sauces = ingredients.filter(
+  //     (item: TIngredient) => item.type === 'sauce'
+  //   );
+
+  // const buns = useSelector(selectIngredientsByType('bun'));
+  // const mains = useSelector(selectIngredientsByType('main'));
+  // const sauces = useSelector(selectIngredientsByType('sauce'));
+
+  //   return { buns, mains, sauces };
+  // }, [ingredients]);
+
   /** TODO: взять переменные из стора */
-  const buns = [];
-  const mains = [];
-  const sauces = [];
+  // const buns = [];
+  // const mains = [];
+  // const sauces = [];
 
   const [currentTab, setCurrentTab] = useState<TTabMode>('bun');
   const titleBunRef = useRef<HTMLHeadingElement>(null);
@@ -27,15 +65,22 @@ export const BurgerIngredients: FC = () => {
     threshold: 0
   });
 
+  // Важем порядок проверки ингредиентов при активации вкладки
+  // (исправление ошибки скачка на соусы при клике по начинкам)
   useEffect(() => {
+    // сначала проверка булок
     if (inViewBuns) {
       setCurrentTab('bun');
-    } else if (inViewSauces) {
-      setCurrentTab('sauce');
     } else if (inViewFilling) {
+      // затем начинки
       setCurrentTab('main');
+    } else if (inViewSauces) {
+      // и лишь потом соусы
+      setCurrentTab('sauce');
     }
   }, [inViewBuns, inViewFilling, inViewSauces]);
+
+  if (loading) return <Preloader />;
 
   const onTabClick = (tab: string) => {
     setCurrentTab(tab as TTabMode);
@@ -47,7 +92,7 @@ export const BurgerIngredients: FC = () => {
       titleSaucesRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
-  return null;
+  // return null;
 
   return (
     <BurgerIngredientsUI
