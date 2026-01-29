@@ -4,7 +4,7 @@ import {
   createSelector,
   createSlice
 } from '@reduxjs/toolkit';
-import { IngredientsState, TTabMode } from '@utils-types';
+import { IngredientsState, TIngredient, TTabMode } from '@utils-types';
 
 const initialState: IngredientsState = {
   ingredients: [],
@@ -60,7 +60,15 @@ export const ingredientsSlice = createSlice({
   },
   selectors: {
     // Селектор всех ингредиентов
-    selectIngredients: (state: IngredientsState) => state.ingredients
+    selectIngredients: (state: IngredientsState) => state.ingredients,
+    // Селектор ингредиента по его id
+    selectIngredientById:
+      (state: IngredientsState) => (ingredientId: string | undefined) => {
+        if (!ingredientId) return null;
+        return state.ingredients.find(
+          (ingredient) => ingredient._id === ingredientId
+        );
+      }
   }
 });
 
@@ -78,7 +86,7 @@ export const makeSelectIngredientsByType = () =>
 
 // export const { addTodo, toggleTodo, setFilter, clearCompleted } =
 //   todosSlice.actions;
-export const { selectIngredients } = ingredientsSlice.selectors;
-// export const { selectIngredientsState } = ingredientsSlice.selectors;
+export const { selectIngredients, selectIngredientById } =
+  ingredientsSlice.selectors;
 
 export default ingredientsSlice.reducer;

@@ -1,16 +1,11 @@
 import { ConstructorPage } from '@pages';
 import '../../index.css';
 import styles from './app.module.css';
-import {
-  AppHeader,
-  BurgerIngredient,
-  IngredientDetails,
-  Modal
-} from '@components';
-import { Route, Routes, useLocation } from 'react-router-dom';
-import { useDispatch, useSelector } from 'src/services/store';
+import { AppHeader, IngredientDetails, Modal } from '@components';
+import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from '../../services/store';
 import { useEffect } from 'react';
-import { fetchIngredients } from 'src/services/slices/ingredientsSlice';
+import { fetchIngredients } from '../../services/slices/ingredientsSlice';
 import { Preloader } from '@ui';
 
 const App = () => {
@@ -21,7 +16,7 @@ const App = () => {
     dispatch(fetchIngredients());
   }, [dispatch]);
 
-  // Флаг: игредиенты загружаются?
+  // Флаг: ингредиенты загружаются?
   const { loading } = useSelector((state) => state.ingredients);
 
   //! Маршрутизация
@@ -29,6 +24,12 @@ const App = () => {
   const location = useLocation();
   const backgroundLocation = location.state?.backgroundLocation; // объект предыдущего маршрута
   //console.log('+++', location, backgroundLocation);
+
+  //! Callback для onClose в Modal
+  const navigate = useNavigate(); // Добавляем useNavigate
+  const onClose = () => {
+    navigate(-1);
+  };
 
   return (
     <>
@@ -47,16 +48,16 @@ const App = () => {
             </Routes>
 
             {/* Роутинг модальных окон (динамические маршруты) */}
-            {/* <Routes>
+            <Routes>
               <Route
                 path='/ingredients/:id'
                 element={
-                  <Modal>
+                  <Modal title='Ингредиент' onClose={onClose}>
                     <IngredientDetails />
                   </Modal>
                 }
               />
-            </Routes> */}
+            </Routes>
           </>
         )}
       </div>
