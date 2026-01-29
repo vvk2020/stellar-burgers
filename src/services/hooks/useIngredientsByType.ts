@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
-import { useSelector } from 'src/services/store';
-import { makeSelectIngredientsByType } from 'src/services/slices/ingredientsSlice';
+import { useSelector } from '../store';
+import { makeSelectIngredientsByType } from '../slices/ingredientsSlice';
 import { TTabMode } from '@utils-types';
 
 /** ХУК-ОБЕРТКА СЕЛЕКТОРА ИНГРЕДИЕНТОВ ПО ИХ ТИПУ */

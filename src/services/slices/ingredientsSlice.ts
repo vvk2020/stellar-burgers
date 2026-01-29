@@ -12,34 +12,13 @@ const initialState: IngredientsState = {
   error: null
 };
 
-// export const fetchIngredients = createAsyncThunk(
-//   'ingredients/fetchIngredients',
-//   async () => await getIngredientsApi()
-// );
-
+/** ASYNC ACTION ПОЛУЧЕНИЯ ВСЕХ ИНГРЕДИЕНТОВ С СЕРВЕРА */
 export const fetchIngredients = createAsyncThunk(
   'ingredients/fetchIngredients',
-  async () => {
-    console.log('++++');
-    return getIngredientsApi();
-  }
-
-  // {
-  //   // Запускается до pending
-  //   condition: (_, { getState }) => {
-  //     const state = getState() as { ingredients: IngredientsState };
-  //     console.log(':)))', state.ingredients.loading);
-  //     // Не запускать, если уже загружаем или уже загружено
-  //     if (state.ingredients.loading || state.ingredients.ingredients.length) {
-  //       return false; // Не запускать thunk
-  //     }
-  //     if (state.ingredients.ingredients.length === 0) {
-  //       return true; // Запускать thunk
-  //     }
-  //   }
-  // }
+  async () => getIngredientsApi()
 );
 
+/** SLICE РАБОТЫ С ИНГРЕДИЕНТАМИ */
 export const ingredientsSlice = createSlice({
   name: 'ingredients',
   initialState,
@@ -82,22 +61,15 @@ export const ingredientsSlice = createSlice({
   selectors: {
     // Селектор всех ингредиентов
     selectIngredients: (state: IngredientsState) => state.ingredients
-
-    // // Селектор ингредиентов по их типу
-    // selectIngredientsByType:
-    //   (state: IngredientsState) => (ingredientType: TTabMode) =>
-    //     state.ingredients.filter(
-    //       (ingredient) => ingredient.type === ingredientType
-    //     )
   }
 });
 
-/** БАЗОВЫЙ СЕЛЕКТОР */
+/** БАЗОВЫЙ СЕЛЕКТОР ВСЕХ ИНГРЕДИЕНТОВ */
 export const selectAllIngredients = (state: {
   ingredients: IngredientsState;
 }) => state.ingredients.ingredients;
 
-/** ФАБРИЧНЫЙ СЕЛЕКТОР С МЕМОИЗАЦИЕЙ */
+/** ФАБРИЧНЫЙ СЕЛЕКТОР ИНГРЕДИЕНТОВ ПОТ ТИПАМ С МЕМОИЗАЦИЕЙ */
 export const makeSelectIngredientsByType = () =>
   createSelector(
     [selectAllIngredients, (_, type: TTabMode) => type],
