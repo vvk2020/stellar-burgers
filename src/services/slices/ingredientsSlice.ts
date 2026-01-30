@@ -64,9 +64,11 @@ export const ingredientsSlice = createSlice({
     // Селектор ингредиента по его id
     selectIngredientById:
       (state: IngredientsState) => (ingredientId: string | undefined) => {
-        if (!ingredientId) return null;
-        return state.ingredients.find(
-          (ingredient) => ingredient._id === ingredientId
+        if (!ingredientId) return;
+        return (
+          state.ingredients.find(
+            (ingredient) => ingredient._id === ingredientId
+          ) || null
         );
       }
   }

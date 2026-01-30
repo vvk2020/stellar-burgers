@@ -22,14 +22,16 @@ const App = () => {
   //! Маршрутизация
 
   const location = useLocation();
-  const backgroundLocation = location.state?.backgroundLocation; // объект предыдущего маршрута
-  //console.log('+++', location, backgroundLocation);
+  const background = location.state?.background; // объект предыдущего маршрута
 
   //! Callback для onClose в Modal
   const navigate = useNavigate(); // Добавляем useNavigate
   const onClose = () => {
     navigate(-1);
   };
+
+  console.log('location', location);
+  console.log('background', background);
 
   return (
     <>
@@ -42,22 +44,24 @@ const App = () => {
         ) : (
           <>
             {/* Роутинг обычных страниц (всегда рендер ConstructorPage) */}
-            <Routes location={backgroundLocation || location}>
+            <Routes location={background || location}>
               <Route path='/' element={<ConstructorPage />} />
               <Route path='/ingredients/:id' element={<IngredientDetails />} />
             </Routes>
 
             {/* Роутинг модальных окон (динамические маршруты) */}
-            <Routes>
-              <Route
-                path='/ingredients/:id'
-                element={
-                  <Modal title='Ингредиент' onClose={onClose}>
-                    <IngredientDetails />
-                  </Modal>
-                }
-              />
-            </Routes>
+            {background && (
+              <Routes>
+                <Route
+                  path='/ingredients/:id'
+                  element={
+                    <Modal title='Ингредиент' onClose={onClose}>
+                      <IngredientDetails />
+                    </Modal>
+                  }
+                />
+              </Routes>
+            )}
           </>
         )}
       </div>

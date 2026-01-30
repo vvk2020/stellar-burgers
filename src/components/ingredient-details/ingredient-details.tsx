@@ -8,16 +8,8 @@ import { selectIngredientById } from '../../services/slices/ingredientsSlice';
 export const IngredientDetails: FC = () => {
   const { id } = useParams<'id'>();
 
-  console.log('id', id);
-
-  // if (id) {
   const ingredientData =
     useSelector((state) => selectIngredientById(state)(id)) || null;
-  console.log('ingredientData', ingredientData);
-  // }
-
-  /** TODO: взять переменную из стора */
-  // const ingredientData = null;
 
   if (!ingredientData) {
     return <Preloader />;
