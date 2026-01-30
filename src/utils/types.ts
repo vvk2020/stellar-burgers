@@ -13,7 +13,7 @@ export type TIngredient = {
 };
 
 export type TConstructorIngredient = TIngredient & {
-  id: string;
+  id: string; // uuid ингредианта в бургере (ингредиенты могут повторятся)
 };
 
 export type TOrder = {

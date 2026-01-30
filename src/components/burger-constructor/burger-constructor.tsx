@@ -1,27 +1,24 @@
 import { BurgerConstructorUI } from '@ui';
-import { FC, useMemo } from 'react';
-import { selectConstructorItems } from '../../services/burger-constructor/slices';
+import { FC } from 'react';
+import {
+  selectConstructorItems,
+  selectItemsTotal
+} from '../../services/burger-constructor/slices';
 import { useAppSelector } from '../../services/store';
 
 export const BurgerConstructor: FC = () => {
   const constructorItems = useAppSelector(selectConstructorItems); // ингредиенты кнструктора
+  const price = useAppSelector(selectItemsTotal); // стоимость бургера
 
   const orderRequest = false;
-
   const orderModalData = null;
 
+  // Handler кнопки "Оформить заказ"
   const onOrderClick = () => {
     if (!constructorItems.bun || orderRequest) return;
   };
-  const closeOrderModal = () => {};
 
-  // Расчет стоимости бургера
-  const price = useMemo(
-    () =>
-      (constructorItems.bun ? constructorItems.bun.price * 2 : 0) +
-      constructorItems.ingredients.reduce((sum, item) => sum + item.price, 0),
-    [constructorItems]
-  );
+  const closeOrderModal = () => {};
 
   return (
     <BurgerConstructorUI
