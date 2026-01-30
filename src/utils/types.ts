@@ -41,7 +41,7 @@ export type TTabMode = 'bun' | 'sauce' | 'main';
 
 //! vvk --------------------------------------------------------------
 
-export interface IngredientsState {
+export interface TIngredientsState {
   ingredients: TIngredient[];
   loading: boolean;
   error: string | null;

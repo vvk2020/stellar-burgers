@@ -12,6 +12,8 @@ export const Modal: FC<TModalProps> = memo(({ title, onClose, children }) => {
       e.key === 'Escape' && onClose();
     };
 
+    /* Вызов callback onClose при закрытии модального окна по Esc
+      (для возврата к предыдущему маршруту) */
     document.addEventListener('keydown', handleEsc);
     return () => {
       document.removeEventListener('keydown', handleEsc);

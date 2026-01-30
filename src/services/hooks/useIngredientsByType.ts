@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
-import { useSelector } from '../store';
-import { makeSelectIngredientsByType } from '../slices/ingredientsSlice';
+import { makeSelectIngredientsByType } from '../ingredients/slices';
 import { TTabMode } from '@utils-types';
+import { useAppSelector } from '../store';
 
 /** ХУК-ОБЕРТКА СЕЛЕКТОРА ИНГРЕДИЕНТОВ ПО ИХ ТИПУ */
 export const useIngredientsByType = (type: TTabMode) => {
@@ -9,5 +9,5 @@ export const useIngredientsByType = (type: TTabMode) => {
     () => makeSelectIngredientsByType(),
     []
   );
-  return useSelector((state) => selectIngredientsByType(state, type));
+  return useAppSelector((state) => selectIngredientsByType(state, type));
 };

@@ -1,13 +1,12 @@
-import { useState, useRef, useEffect, FC } from 'react';
-import { useInView } from 'react-intersection-observer';
 import { TTabMode } from '@utils-types';
-import { BurgerIngredientsUI } from '../ui/burger-ingredients';
-import { useSelector } from '../../services/store';
+import { FC, useEffect, useRef, useState } from 'react';
+import { useInView } from 'react-intersection-observer';
 import { useIngredientsByType } from '../../services/hooks/useIngredientsByType';
-import { Preloader } from '@ui';
+import { useAppSelector } from '../../services/store';
+import { BurgerIngredientsUI } from '../ui/burger-ingredients';
 
 export const BurgerIngredients: FC = () => {
-  const { ingredients, loading } = useSelector((state) => state.ingredients);
+  const { ingredients, loading } = useAppSelector((state) => state.ingredients);
 
   // Ингредиенты по типам
   const buns = useIngredientsByType('bun');
@@ -45,8 +44,6 @@ export const BurgerIngredients: FC = () => {
       setCurrentTab('sauce');
     }
   }, [inViewBuns, inViewFilling, inViewSauces]);
-
-  // if (loading) return <Preloader />;
 
   const onTabClick = (tab: string) => {
     setCurrentTab(tab as TTabMode);

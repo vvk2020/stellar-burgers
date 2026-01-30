@@ -1,22 +1,12 @@
-import { getIngredientsApi } from '@api';
-import {
-  createAsyncThunk,
-  createSelector,
-  createSlice
-} from '@reduxjs/toolkit';
-import { IngredientsState, TIngredient, TTabMode } from '@utils-types';
+import { createSelector, createSlice } from '@reduxjs/toolkit';
+import { TIngredientsState, TTabMode } from '@utils-types';
+import { fetchIngredients } from './actions';
 
-const initialState: IngredientsState = {
+const initialState: TIngredientsState = {
   ingredients: [],
   loading: false,
   error: null
 };
-
-/** ASYNC ACTION ПОЛУЧЕНИЯ ВСЕХ ИНГРЕДИЕНТОВ С СЕРВЕРА */
-export const fetchIngredients = createAsyncThunk(
-  'ingredients/fetchIngredients',
-  async () => getIngredientsApi()
-);
 
 /** SLICE РАБОТЫ С ИНГРЕДИЕНТАМИ */
 export const ingredientsSlice = createSlice({
@@ -59,11 +49,15 @@ export const ingredientsSlice = createSlice({
       });
   },
   selectors: {
-    // Селектор всех ингредиентов
-    selectIngredients: (state: IngredientsState) => state.ingredients,
-    // Селектор ингредиента по его id
+    /** Селектор всех ингредиентов */
+    selectIngredients: (state: TIngredientsState) => [...state.ingredients],
+
+    /** Селектор статуса загрузки ингредиентов */
+    selectIngredientsLoadingState: (state: TIngredientsState) => state.loading,
+
+    /** Селектор ингредиента по его id */
     selectIngredientById:
-      (state: IngredientsState) => (ingredientId: string | undefined) => {
+      (state: TIngredientsState) => (ingredientId: string | undefined) => {
         if (!ingredientId) return;
         return (
           state.ingredients.find(
@@ -76,7 +70,7 @@ export const ingredientsSlice = createSlice({
 
 /** БАЗОВЫЙ СЕЛЕКТОР ВСЕХ ИНГРЕДИЕНТОВ */
 export const selectAllIngredients = (state: {
-  ingredients: IngredientsState;
+  ingredients: TIngredientsState;
 }) => state.ingredients.ingredients;
 
 /** ФАБРИЧНЫЙ СЕЛЕКТОР ИНГРЕДИЕНТОВ ПОТ ТИПАМ С МЕМОИЗАЦИЕЙ */
@@ -88,7 +82,10 @@ export const makeSelectIngredientsByType = () =>
 
 // export const { addTodo, toggleTodo, setFilter, clearCompleted } =
 //   todosSlice.actions;
-export const { selectIngredients, selectIngredientById } =
-  ingredientsSlice.selectors;
+export const {
+  selectIngredients,
+  selectIngredientsLoadingState,
+  selectIngredientById
+} = ingredientsSlice.selectors;
 
 export default ingredientsSlice.reducer;
