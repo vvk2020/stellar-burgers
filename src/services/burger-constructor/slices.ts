@@ -116,7 +116,7 @@ export const burgerConstructorSlice = createSlice({
     //   });
   },
   selectors: {
-    /** Мемоизированный селектор всех ингредиентов конструктора */
+    /** Ингредиенты конструктора */
     selectConstructorItems: createSelector(
       [
         (state: IBurgerConstructorState) => state.bun,
@@ -128,7 +128,7 @@ export const burgerConstructorSlice = createSlice({
       })
     ),
 
-    /** Мемоизированный селектор расчетной стоимости ингредиентов конструктора */
+    /** Расчетная стоимость ингредиентов конструктора */
     selectItemsTotal: createSelector(
       [
         (state: IBurgerConstructorState) => state.bun,
@@ -137,13 +137,28 @@ export const burgerConstructorSlice = createSlice({
       (bun, ingredients) =>
         (bun ? bun.price * 2 : 0) +
         ingredients.reduce((sum, item) => sum + item.price, 0)
-    )
+    ),
+
+    /** Количество ингредиента в конструкторе по его _id */
+    selectItemCount: (state: IBurgerConstructorState) => {
+      const countMap = new Map<string, number>();
+
+      // Ингредиенты
+      state.ingredients.forEach((item) => {
+        countMap.set(item._id, (countMap.get(item._id) || 0) + 1);
+      });
+
+      // Булка
+      if (state.bun) countMap.set(state.bun._id, 2);
+
+      return (_id: string) => countMap.get(_id) || 0;
+    }
   }
 });
 
 export const { addItem, delItem, moveUpItem, moveDownItem } =
   burgerConstructorSlice.actions;
-export const { selectConstructorItems, selectItemsTotal } =
+export const { selectConstructorItems, selectItemsTotal, selectItemCount } =
   burgerConstructorSlice.selectors;
 
 export default burgerConstructorSlice.reducer;
