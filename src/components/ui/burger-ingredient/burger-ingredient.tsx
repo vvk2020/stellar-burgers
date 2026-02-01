@@ -14,8 +14,6 @@ export const BurgerIngredientUI: FC<TBurgerIngredientUIProps> = memo(
   ({ ingredient, count, handleAdd, locationState }) => {
     const { image, price, name, _id } = ingredient;
 
-    console.log(name, count);
-
     return (
       <li className={styles.container}>
         <Link
@@ -23,7 +21,7 @@ export const BurgerIngredientUI: FC<TBurgerIngredientUIProps> = memo(
           to={`/ingredients/${_id}`}
           state={locationState}
         >
-          {count > 0 && <Counter count={count} />}
+          {!!count && count > 0 && <Counter count={count} />}
           <img className={styles.img} src={image} alt='картинка ингредиента.' />
           <div className={`${styles.cost} mt-2 mb-2`}>
             <p className='text text_type_digits-default mr-2'>{price}</p>

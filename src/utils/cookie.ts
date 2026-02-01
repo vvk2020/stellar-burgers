@@ -21,6 +21,7 @@ export function setCookie(
   };
 
   let exp = props.expires;
+
   if (exp && typeof exp === 'number') {
     const d = new Date();
     d.setTime(d.getTime() + exp * 1000);

@@ -18,11 +18,7 @@ export const BurgerIngredient: FC<TBurgerIngredientProps> = memo(
     const handleAdd = () => {
       // Добавление ингредиента в store
       dispatch(addItem(ingredient));
-      console.log('count', count);
     };
-
-    // count =
-    // console.log('abc', abc);
 
     return (
       <BurgerIngredientUI
