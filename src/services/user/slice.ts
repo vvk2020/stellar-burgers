@@ -1,14 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { TUser } from '../../utils/types';
+import { TUserState } from '../../utils/types';
 import { loginUser, registerUser } from './actions';
 
-/** STATE ПОЛЬЗОВАТЕЛЯ */
-export interface TUserState {
-  isProcessed: boolean; // авторизация/регистрация выполняется?
-  isAuthenticated: boolean; // user аутентифицирован?
-  user: TUser | null; // user-данные
-  error: string | null; // сообщение об ошибке
-}
 /** НАЧАЛЬНЫЙ STATE ПОЛЬЗОВАТЕЛЯ */
 const initialState: TUserState = {
   isProcessed: false, // аутентификация/регистрация НЕ выполняется

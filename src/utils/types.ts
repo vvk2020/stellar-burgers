@@ -32,20 +32,13 @@ export type TOrdersData = {
   totalToday: number;
 };
 
+/** ПОЛЬЗОВАТЕЛЬ */
 export type TUser = {
   email: string;
   name: string;
 };
 
 export type TTabMode = 'bun' | 'sauce' | 'main';
-
-//! vvk -------------------------------------------------------------
-
-export interface TIngredientsState {
-  ingredients: TIngredient[];
-  loading: boolean;
-  error: string | null;
-}
 
 //! из burger-api.ts ------------------------------------------------
 
@@ -97,3 +90,19 @@ export type TRegisterData = {
   name: string;
   password: string;
 };
+
+//! vvk -------------------------------------------------------------
+
+export interface TIngredientsState {
+  ingredients: TIngredient[];
+  loading: boolean;
+  error: string | null;
+}
+
+/** STATE ПОЛЬЗОВАТЕЛЯ */
+export interface TUserState {
+  isProcessed: boolean; // авторизация/регистрация выполняется?
+  isAuthenticated: boolean; // user аутентифицирован?
+  user: TUser | null; // user-данные
+  error: string | null; // сообщение об ошибке
+}

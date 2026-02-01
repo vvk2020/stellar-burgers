@@ -99,22 +99,6 @@ export const burgerConstructorSlice = createSlice({
       state.ingredients = newIngredients;
     }
   },
-  // Создание редюсеров внешних (асинхронных) actions
-  extraReducers: (builder) => {
-    // builder
-    //   .addCase(fetchIngredients.pending, (state) => {
-    //     state.loading = true;
-    //     state.error = null;
-    //   })
-    //   .addCase(fetchIngredients.fulfilled, (state, action) => {
-    //     state.loading = false;
-    //     state.ingredients = action.payload;
-    //   })
-    //   .addCase(fetchIngredients.rejected, (state, action) => {
-    //     state.loading = false;
-    //     state.error = action.payload as string;
-    //   });
-  },
   selectors: {
     /** Ингредиенты конструктора */
     selectConstructorItems: createSelector(

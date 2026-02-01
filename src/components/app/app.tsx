@@ -13,6 +13,7 @@ import { Preloader } from '@ui';
 import { useEffect } from 'react';
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import '../../index.css';
+import { fetchFeeds } from '../../services/feeds/actions';
 import { fetchIngredients } from '../../services/ingredients/actions';
 import { selectIngredientsLoadingState } from '../../services/ingredients/slices';
 import { useAppDispatch, useAppSelector } from '../../services/store';
@@ -26,9 +27,9 @@ const App = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Получение всех ингредиентов с сервера
   useEffect(() => {
-    dispatch(fetchIngredients());
+    dispatch(fetchIngredients()); // запрос всех ингредиентов
+    dispatch(fetchFeeds()); // запрос заказов в ленту
   }, [dispatch]);
 
   const background = location.state?.background; // location предыдущего маршрута

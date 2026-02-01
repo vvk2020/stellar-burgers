@@ -1,13 +1,15 @@
 import { combineSlices, configureStore } from '@reduxjs/toolkit';
 import { useDispatch, useSelector } from 'react-redux';
 import { burgerConstructorSlice } from './burger-constructor/slices';
+import { feedsSlice } from './feeds/slices.';
 import { ingredientsSlice } from './ingredients/slices';
 import { userSlice } from './user/slice';
 
 const rootReducer = combineSlices(
   ingredientsSlice,
   burgerConstructorSlice,
-  userSlice
+  userSlice,
+  feedsSlice
 );
 
 const store = configureStore({
