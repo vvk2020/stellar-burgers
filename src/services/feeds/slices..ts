@@ -55,8 +55,21 @@ export const feedsSlice = createSlice({
         (state: IFeedsState) => state.totalToday
       ],
       (total, totalToday) => ({ total, totalToday })
+    ),
+
+    /** Селектор заказа из ленты по его number */
+    selectFeedsOrderByNumber: createSelector(
+      [
+        (state: IFeedsState) => state.orders,
+        (state: IFeedsState, orderNumber: number) => orderNumber
+      ],
+      (orders, orderNumber) => {
+        if (!orderNumber) return null;
+        return orders.find((order) => order.number === orderNumber) || null;
+      }
     )
   }
 });
 
-export const { selectFeedsOrders, selectFeedsStat } = feedsSlice.selectors;
+export const { selectFeedsOrders, selectFeedsStat, selectFeedsOrderByNumber } =
+  feedsSlice.selectors;

@@ -65,5 +65,28 @@ export const userSlice = createSlice({
         state.isAuthenticated = true; // авторизация ✅
         state.user = action.payload.user; // передача данных пользователя
       });
+  },
+  selectors: {
+    /** Селектор всех ингредиентов */
+    selectUser: (state: TUserState) => state.user,
+
+    /** Селектор статуса загрузки ингредиентов */
+    selectUserLoadingState: (state: TUserState) => state.loading
+
+    // /** Селектор ингредиента по его id */
+    // selectIngredientById:
+    //   (state: TIngredientsState) => (ingredientId: string | undefined) => {
+    //     if (!ingredientId) return;
+    //     return (
+    //       state.data.find((ingredient) => ingredient._id === ingredientId) ||
+    //       null
+    //     );
+    //   }
   }
 });
+
+// export const { addTodo, toggleTodo, setFilter, clearCompleted } =
+//   todosSlice.actions;
+export const { selectUser, selectUserLoadingState } = userSlice.selectors;
+
+export default userSlice.reducer;

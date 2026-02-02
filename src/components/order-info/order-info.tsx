@@ -1,24 +1,27 @@
 import { TIngredient } from '@utils-types';
 import { FC, useMemo } from 'react';
+import { useLocation, useParams } from 'react-router-dom';
+import { selectFeedsOrderByNumber } from '../../services/feeds/slices.';
 import { selectIngredients } from '../../services/ingredients/slices';
 import { useAppSelector } from '../../services/store';
 import { OrderInfoUI } from '../ui/order-info';
 import { Preloader } from '../ui/preloader';
 
 export const OrderInfo: FC = () => {
-  /** TODO: взять переменные orderData и ingredients из стора */
+  // Если background в location.state есть, то OrderInfo в модальном окне
+  const location = useLocation();
+  const isModalMode = !!location.state?.background;
 
-  const orderData = {
-    createdAt: '',
-    ingredients: [],
-    _id: '',
-    status: '',
-    name: '',
-    updatedAt: 'string',
-    number: 0
-  };
+  // Номер заказа
+  const { number } = useParams<{ number: string }>();
+  const orderNumber = number ? parseInt(number, 10) : 0;
 
-  // const ingredients: TIngredient[] = [];
+  // Заказ из ленты по его номеру orderNumber
+  const orderData = useAppSelector((state) =>
+    selectFeedsOrderByNumber(state, orderNumber)
+  );
+
+  // Ингредиенты
   const ingredients = useAppSelector(selectIngredients); // ингредиенты
 
   /* Готовим данные для отображения */
@@ -67,5 +70,5 @@ export const OrderInfo: FC = () => {
     return <Preloader />;
   }
 
-  return <OrderInfoUI orderInfo={orderInfo} />;
+  return <OrderInfoUI orderInfo={orderInfo} isModal={isModalMode} />;
 };

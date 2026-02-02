@@ -1,4 +1,4 @@
-import { AppHeader, IngredientDetails, Modal } from '@components';
+import { AppHeader, IngredientDetails, Modal, OrderInfo } from '@components';
 import {
   ConstructorPage,
   Feed,
@@ -55,8 +55,6 @@ const App = () => {
       })
     );
 
-    // const userToken = localStorage.getItem('token');
-    // console.log('App', userToken);
     // if (userToken) {
     //   // token есть => запрос пользователя
     //   dispatch(loginUser({ token: userToken }));
@@ -65,6 +63,8 @@ const App = () => {
     //   dispatch(init());
     // }
   }, []);
+
+  console.log('location.state', location.state, location.pathname);
 
   return (
     <>
@@ -81,13 +81,16 @@ const App = () => {
               <Route path='/' element={<ConstructorPage />} />
               <Route path='/feed' element={<Feed />} />
               <Route path='/ingredients/:id' element={<IngredientDetails />} />
-              <Route path='/login' element={<Login />} />
+              <Route path='/feed/:number' element={<OrderInfo />} />
               {/* Защищенные маршруты */}
+              {/* <ProtectedRoute> */}
+              <Route path='/login' element={<Login />} />
               <Route path='/register' element={<Register />} />
               <Route path='/forgot-password' element={<ResetPassword />} />
               <Route path='/reset-password' element={<ResetPassword />} />
               <Route path='/profile' element={<Profile />} />
               <Route path='/profile/orders' element={<ProfileOrders />} />
+              {/* </ProtectedRoute> */}
               {/* Неизвестные маршруты */}
               <Route path='*' element={<NotFound404 />} />
             </Routes>
@@ -103,6 +106,19 @@ const App = () => {
                     </Modal>
                   }
                 />
+                <Route
+                  path='/feed/:number'
+                  element={
+                    <Modal
+                      title={`#${location.pathname.split('/').pop()}`}
+                      onClose={onClose}
+                    >
+                      <OrderInfo />
+                    </Modal>
+                  }
+                />
+
+                {/* <Route path='/feed/:number' element={<ModalOrderInfo />} /> */}
               </Routes>
             )}
           </>
