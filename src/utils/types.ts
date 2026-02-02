@@ -40,7 +40,7 @@ export type TUser = {
 
 export type TTabMode = 'bun' | 'sauce' | 'main';
 
-//! из burger-api.ts ------------------------------------------------
+//! burger-api.ts ---------------------------------------------------
 
 export type TServerResponse<T> = {
   success: boolean;
@@ -52,13 +52,14 @@ export type TRefreshResponse = TServerResponse<{
 }>;
 
 export type TIngredientsResponse = TServerResponse<{
-  data: TIngredient[];
+  data: TIngredient[]; // ингредиенты
 }>;
 
+/** ОТВЕТ СЕРВЕРА НА ЗАПРОС ЛЕНТЫ ЗАКАЗОВ */
 export type TFeedsResponse = TServerResponse<{
-  orders: TOrder[];
-  total: number;
-  totalToday: number;
+  orders: TOrder[]; // заказы
+  total: number; // выполнено заказов за все время
+  totalToday: number; //выполнено заказов за сегодня
 }>;
 
 export type TOrdersResponse = TServerResponse<{
@@ -77,7 +78,7 @@ export type TOrderResponse = TServerResponse<{
 export type TAuthResponse = TServerResponse<{
   refreshToken: string;
   accessToken: string;
-  user: TUser;
+  user: TUser | null;
 }>;
 
 export type TLoginData = {
@@ -93,16 +94,28 @@ export type TRegisterData = {
 
 //! vvk -------------------------------------------------------------
 
-export interface TIngredientsState {
-  ingredients: TIngredient[];
-  loading: boolean;
-  error: string | null;
+/** ДАННЫЕ, ИЗВЛЕЧЕННЫЕ ИЗ ОТВЕТА СЕРВЕРА */
+export type ExtractResponseData<T> =
+  T extends TServerResponse<infer U> ? U : never;
+
+/** STORE STATE ИНГРЕДИЕНТОВ */
+export interface TIngredientsState extends ExtractResponseData<TIngredientsResponse> {
+  loading: boolean; // запрос выполняется?
+  error: string | null; // сообщение об ошибке
 }
 
-/** STATE ПОЛЬЗОВАТЕЛЯ */
-export interface TUserState {
-  isProcessed: boolean; // авторизация/регистрация выполняется?
+/** STORE STATE ПОЛЬЗОВАТЕЛЯ (БЕЗ ТОКЕНОВ) */
+export interface TUserState extends Omit<
+  ExtractResponseData<TAuthResponse>,
+  'refreshToken' | 'accessToken'
+> {
   isAuthenticated: boolean; // user аутентифицирован?
-  user: TUser | null; // user-данные
+  loading: boolean; // запрос выполняется?
+  error: string | null; // сообщение об ошибке
+}
+
+/** STORE STATE ЛЕНТЫ ЗАКАЗОВ */
+export interface IFeedsState extends ExtractResponseData<TFeedsResponse> {
+  loading: boolean; // запрос выполняется?
   error: string | null; // сообщение об ошибке
 }

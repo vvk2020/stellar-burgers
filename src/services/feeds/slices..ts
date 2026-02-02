@@ -1,18 +1,13 @@
 import { createSelector, createSlice } from '@reduxjs/toolkit';
-import { TOrder } from '../../utils/types';
+import { IFeedsState } from '../../utils/types';
 import { fetchFeeds } from './actions';
-
-/** STATE ЛЕНТЫ ЗАКАЗОВ */
-export interface IFeedsState {
-  isProcessed: boolean; // запрос выполняется?
-  orders: TOrder[]; // заказы
-  error: string | null; // сообщение об ошибке
-}
 
 /** НАЧАЛЬНЫЙ STATE ЛЕНТЫ ЗАКАЗОВ */
 const initialState: IFeedsState = {
-  isProcessed: false,
+  loading: false,
   orders: [],
+  total: 0,
+  totalToday: 0,
   error: null
 };
 
@@ -25,34 +20,43 @@ export const feedsSlice = createSlice({
     builder
       // Перед запросом ленты заказов
       .addCase(fetchFeeds.pending, (state) => {
-        state.isProcessed = true; // запрос запущен
-        state.orders = []; // сброс текущей ленты
+        state.loading = true;
+        state.orders = [];
+        state.total = 0;
+        state.totalToday = 0;
         state.error = null;
       })
 
       // Запрос ленты заказов завершен с ошибкой
       .addCase(fetchFeeds.rejected, (state, action) => {
-        state.isProcessed = false; // запрос не выполняется
+        state.loading = false;
         state.error = action.error.message || 'Ошибка запроса ленты заказов';
       })
 
       // Запрос ленты заказов успешно завершен
       .addCase(fetchFeeds.fulfilled, (state, action) => {
-        state.isProcessed = false; // запрос не выполняется
+        state.loading = false;
         if (action.payload.success) {
           console.log('FEEDS', action.payload);
-          state.orders = action.payload.orders; // передача заказов
+          state.orders = action.payload.orders;
+          state.total = action.payload.total;
+          state.totalToday = action.payload.totalToday;
         }
       });
   },
   selectors: {
     /** Селектор ленты заказов */
-    // selectOrdersFeeds: (state: IFeedsState) => [...state.orders]
-    selectFeedsOrders: createSelector(
-      [(state: IFeedsState) => state.orders],
-      (orders) => [...orders]
+    selectFeedsOrders: (state: IFeedsState) => state.orders,
+
+    /** Селектор статистики заказов (total, totalToday) */
+    selectFeedsStat: createSelector(
+      [
+        (state: IFeedsState) => state.total,
+        (state: IFeedsState) => state.totalToday
+      ],
+      (total, totalToday) => ({ total, totalToday })
     )
   }
 });
 
-export const { selectFeedsOrders } = feedsSlice.selectors;
+export const { selectFeedsOrders, selectFeedsStat } = feedsSlice.selectors;

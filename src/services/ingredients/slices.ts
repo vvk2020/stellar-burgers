@@ -3,7 +3,7 @@ import { TIngredientsState, TTabMode } from '@utils-types';
 import { fetchIngredients } from './actions';
 
 const initialState: TIngredientsState = {
-  ingredients: [],
+  data: [],
   loading: false,
   error: null
 };
@@ -41,16 +41,16 @@ export const ingredientsSlice = createSlice({
       })
       .addCase(fetchIngredients.fulfilled, (state, action) => {
         state.loading = false;
-        state.ingredients = action.payload;
+        state.data = action.payload;
       })
       .addCase(fetchIngredients.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload as string;
+        state.error = action.error.message || 'Ошибка запроса ингредиентов';
       });
   },
   selectors: {
     /** Селектор всех ингредиентов */
-    selectIngredients: (state: TIngredientsState) => [...state.ingredients],
+    selectIngredients: (state: TIngredientsState) => state.data,
 
     /** Селектор статуса загрузки ингредиентов */
     selectIngredientsLoadingState: (state: TIngredientsState) => state.loading,
@@ -60,9 +60,8 @@ export const ingredientsSlice = createSlice({
       (state: TIngredientsState) => (ingredientId: string | undefined) => {
         if (!ingredientId) return;
         return (
-          state.ingredients.find(
-            (ingredient) => ingredient._id === ingredientId
-          ) || null
+          state.data.find((ingredient) => ingredient._id === ingredientId) ||
+          null
         );
       }
   }
@@ -71,7 +70,7 @@ export const ingredientsSlice = createSlice({
 /** БАЗОВЫЙ СЕЛЕКТОР ВСЕХ ИНГРЕДИЕНТОВ */
 export const selectAllIngredients = (state: {
   ingredients: TIngredientsState;
-}) => state.ingredients.ingredients;
+}) => state.ingredients.data;
 
 /** ФАБРИЧНЫЙ СЕЛЕКТОР ИНГРЕДИЕНТОВ ПОТ ТИПАМ С МЕМОИЗАЦИЕЙ */
 export const makeSelectIngredientsByType = () =>

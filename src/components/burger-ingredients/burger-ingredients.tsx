@@ -2,12 +2,9 @@ import { TTabMode } from '@utils-types';
 import { FC, useEffect, useRef, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
 import { useIngredientsByType } from '../../services/hooks/useIngredientsByType';
-import { useAppSelector } from '../../services/store';
 import { BurgerIngredientsUI } from '../ui/burger-ingredients';
 
 export const BurgerIngredients: FC = () => {
-  const { ingredients, loading } = useAppSelector((state) => state.ingredients);
-
   // Ингредиенты по типам
   const buns = useIngredientsByType('bun');
   const mains = useIngredientsByType('main');
