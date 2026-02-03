@@ -2,6 +2,12 @@
   margin: 0 auto;
   width: 640px;
 }
+
+.orderNumber {
+  display: block;
+  text-align: center;
+}
+
 .number {
   text-align: center;
 }

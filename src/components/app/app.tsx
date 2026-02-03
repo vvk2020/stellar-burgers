@@ -64,7 +64,7 @@ const App = () => {
     // }
   }, []);
 
-  console.log('location.state', location.state, location.pathname);
+  console.log('====== location.state', location.state, location.pathname);
 
   return (
     <>

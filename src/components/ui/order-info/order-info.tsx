@@ -7,18 +7,21 @@ import { FC, memo } from 'react';
 import styles from './order-info.module.css';
 
 import { OrderStatus } from '@components';
+import clsx from 'clsx';
 import { OrderInfoUIProps } from './type';
 
 export const OrderInfoUI: FC<OrderInfoUIProps> = memo(
   ({ orderInfo, isModal }) => (
     <div className={`${isModal ? styles.wrap_modal : styles.wrap}`}>
       {!isModal && (
-        <span className={`text text_type_digits-default`}>
+        <span
+          className={clsx(`text text_type_digits-default`, styles.orderNumber)}
+        >
           #{orderInfo.number}
         </span>
       )}
 
-      <h3 className={`text text_type_main-medium  pb-3 pt-10 ${styles.header}`}>
+      <h3 className={`text text_type_main-medium pb-3 pt-10 ${styles.header}`}>
         {orderInfo.name}
       </h3>
       <OrderStatus status={orderInfo.status} />
