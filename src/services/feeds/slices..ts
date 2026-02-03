@@ -1,10 +1,10 @@
 import { createSelector, createSlice } from '@reduxjs/toolkit';
-import { IFeedsState } from '../../utils/types';
+import { TFeedsState } from '../../utils/types';
 import { fetchFeeds } from './actions';
 
 /** НАЧАЛЬНЫЙ STATE ЛЕНТЫ ЗАКАЗОВ */
-const initialState: IFeedsState = {
-  loading: false,
+const initialState: TFeedsState = {
+  isRequested: false,
   orders: [],
   total: 0,
   totalToday: 0,
@@ -20,7 +20,7 @@ export const feedsSlice = createSlice({
     builder
       // Перед запросом ленты заказов
       .addCase(fetchFeeds.pending, (state) => {
-        state.loading = true;
+        state.isRequested = true;
         state.orders = [];
         state.total = 0;
         state.totalToday = 0;
@@ -29,15 +29,14 @@ export const feedsSlice = createSlice({
 
       // Запрос ленты заказов завершен с ошибкой
       .addCase(fetchFeeds.rejected, (state, action) => {
-        state.loading = false;
+        state.isRequested = false;
         state.error = action.error.message || 'Ошибка запроса ленты заказов';
       })
 
       // Запрос ленты заказов успешно завершен
       .addCase(fetchFeeds.fulfilled, (state, action) => {
-        state.loading = false;
+        state.isRequested = false;
         if (action.payload.success) {
-          console.log('FEEDS', action.payload);
           state.orders = action.payload.orders;
           state.total = action.payload.total;
           state.totalToday = action.payload.totalToday;
@@ -46,13 +45,13 @@ export const feedsSlice = createSlice({
   },
   selectors: {
     /** Селектор ленты заказов */
-    selectFeedsOrders: (state: IFeedsState) => state.orders,
+    selectFeedsOrders: (state: TFeedsState) => state.orders,
 
     /** Селектор статистики заказов (total, totalToday) */
     selectFeedsStat: createSelector(
       [
-        (state: IFeedsState) => state.total,
-        (state: IFeedsState) => state.totalToday
+        (state: TFeedsState) => state.total,
+        (state: TFeedsState) => state.totalToday
       ],
       (total, totalToday) => ({ total, totalToday })
     ),
@@ -60,16 +59,23 @@ export const feedsSlice = createSlice({
     /** Селектор заказа из ленты по его number */
     selectFeedsOrderByNumber: createSelector(
       [
-        (state: IFeedsState) => state.orders,
-        (state: IFeedsState, orderNumber: number) => orderNumber
+        (state: TFeedsState) => state.orders,
+        (state: TFeedsState, orderNumber: number) => orderNumber
       ],
       (orders, orderNumber) => {
         if (!orderNumber) return null;
         return orders.find((order) => order.number === orderNumber) || null;
       }
-    )
+    ),
+
+    /** Селектор статуса загрузки ингредиентов */
+    selectFeedsRequestStatus: (state: TFeedsState) => state.isRequested
   }
 });
 
-export const { selectFeedsOrders, selectFeedsStat, selectFeedsOrderByNumber } =
-  feedsSlice.selectors;
+export const {
+  selectFeedsOrders,
+  selectFeedsStat,
+  selectFeedsOrderByNumber,
+  selectFeedsRequestStatus
+} = feedsSlice.selectors;

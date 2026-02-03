@@ -4,7 +4,7 @@ import { fetchIngredients } from './actions';
 
 const initialState: TIngredientsState = {
   data: [],
-  loading: false,
+  isRequested: false,
   error: null
 };
 
@@ -36,15 +36,15 @@ export const ingredientsSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(fetchIngredients.pending, (state) => {
-        state.loading = true;
+        state.isRequested = true;
         state.error = null;
       })
       .addCase(fetchIngredients.fulfilled, (state, action) => {
-        state.loading = false;
+        state.isRequested = false;
         state.data = action.payload;
       })
       .addCase(fetchIngredients.rejected, (state, action) => {
-        state.loading = false;
+        state.isRequested = false;
         state.error = action.error.message || 'Ошибка запроса ингредиентов';
       });
   },
@@ -53,7 +53,8 @@ export const ingredientsSlice = createSlice({
     selectIngredients: (state: TIngredientsState) => state.data,
 
     /** Селектор статуса загрузки ингредиентов */
-    selectIngredientsLoadingState: (state: TIngredientsState) => state.loading,
+    selectIngredientsRequestState: (state: TIngredientsState) =>
+      state.isRequested,
 
     /** Селектор ингредиента по его id */
     selectIngredientById:
@@ -83,7 +84,7 @@ export const makeSelectIngredientsByType = () =>
 //   todosSlice.actions;
 export const {
   selectIngredients,
-  selectIngredientsLoadingState,
+  selectIngredientsRequestState,
   selectIngredientById
 } = ingredientsSlice.selectors;
 

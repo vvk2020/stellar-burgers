@@ -87,6 +87,10 @@ export const getOrdersApi = () =>
     return Promise.reject(data);
   });
 
+/** АВТОРИЗОВАННОЕ СОЗДАНИЕ НОВОГО ЗАКАЗА БУРГЕРА
+ * @param {string[]} data Массив идентификаторов булки и ингредиентов
+ * @return {Promise<TNewOrderResponse>} Данные созданного заказа
+ */
 export const orderBurgerApi = (data: string[]) =>
   fetchWithRefresh<TNewOrderResponse>(`${URL}/orders`, {
     method: 'POST',

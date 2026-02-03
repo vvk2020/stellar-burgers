@@ -136,13 +136,33 @@ export const burgerConstructorSlice = createSlice({
       if (state.bun) countMap.set(state.bun._id, 2);
 
       return (_id: string) => countMap.get(_id) || 0;
-    }
+    },
+
+    /** Массив id булки и ингредиентов конструктора */
+    selectIngredientsIds: createSelector(
+      [
+        (state: IBurgerConstructorState) => state.bun,
+        (state: IBurgerConstructorState) => state.ingredients
+      ],
+      (bun, ingredients) => {
+        const ids: string[] = [];
+        if (bun) ids.push(bun.id);
+        if (Array.isArray(ingredients)) {
+          ingredients.forEach((item) => ids.push(item.id));
+        }
+        return ids;
+      }
+    )
   }
 });
 
 export const { addItem, delItem, moveUpItem, moveDownItem } =
   burgerConstructorSlice.actions;
-export const { selectConstructorItems, selectItemsTotal, selectItemCount } =
-  burgerConstructorSlice.selectors;
+export const {
+  selectConstructorItems,
+  selectItemsTotal,
+  selectItemCount,
+  selectIngredientsIds
+} = burgerConstructorSlice.selectors;
 
 export default burgerConstructorSlice.reducer;

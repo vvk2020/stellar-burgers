@@ -15,14 +15,14 @@ import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import '../../index.css';
 import { fetchFeeds } from '../../services/feeds/actions';
 import { fetchIngredients } from '../../services/ingredients/actions';
-import { selectIngredientsLoadingState } from '../../services/ingredients/slices';
+import { selectIngredientsRequestState } from '../../services/ingredients/slices';
 import { useAppDispatch, useAppSelector } from '../../services/store';
-import { loginUser } from '../../services/user/actions';
+import { ProtectedRoute } from '../protected-route';
 import styles from './app.module.css';
 
 const App = () => {
   const dispatch = useAppDispatch();
-  const loading = useAppSelector(selectIngredientsLoadingState); // флаг: ингредиенты загружаются?
+  const isProcesing = useAppSelector(selectIngredientsRequestState); // флаг: ингредиенты загружаются?
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -48,13 +48,12 @@ const App = () => {
     //   })
     // );
     // Аутентификация по логину и паролю
-    dispatch(
-      loginUser({
-        email: 'vvkb23dae6e-afa2-4f4c-b12a-1c952c1441e4@yandex.ru',
-        password: 'qwertyКУ78+++@'
-      })
-    );
-
+    // dispatch(
+    //   loginUser({
+    //     email: 'vvkb23dae6e-afa2-4f4c-b12a-1c952c1441e4@yandex.ru',
+    //     password: 'qwertyКУ78+++@'
+    //   })
+    // );
     // if (userToken) {
     //   // token есть => запрос пользователя
     //   dispatch(loginUser({ token: userToken }));
@@ -64,15 +63,13 @@ const App = () => {
     // }
   }, []);
 
-  console.log('====== location.state', location.state, location.pathname);
-
   return (
     <>
       <div className={styles.app}>
         <AppHeader />
 
         {/* В процессе загрузки ингредиентов показываем Preloader */}
-        {loading ? (
+        {isProcesing ? (
           <Preloader />
         ) : (
           <>
@@ -82,15 +79,57 @@ const App = () => {
               <Route path='/feed' element={<Feed />} />
               <Route path='/ingredients/:id' element={<IngredientDetails />} />
               <Route path='/feed/:number' element={<OrderInfo />} />
+
               {/* Защищенные маршруты */}
-              {/* <ProtectedRoute> */}
-              <Route path='/login' element={<Login />} />
-              <Route path='/register' element={<Register />} />
-              <Route path='/forgot-password' element={<ResetPassword />} />
-              <Route path='/reset-password' element={<ResetPassword />} />
-              <Route path='/profile' element={<Profile />} />
-              <Route path='/profile/orders' element={<ProfileOrders />} />
-              {/* </ProtectedRoute> */}
+              <Route
+                path='/profile'
+                element={
+                  <ProtectedRoute>
+                    <Profile />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path='/login'
+                element={
+                  <ProtectedRoute>
+                    <Login />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path='/register'
+                element={
+                  <ProtectedRoute>
+                    <Register />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path='/forgot-password'
+                element={
+                  <ProtectedRoute>
+                    <ResetPassword />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path='/reset-password'
+                element={
+                  <ProtectedRoute>
+                    <ResetPassword />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path='/profile/orders'
+                element={
+                  <ProtectedRoute>
+                    <ProfileOrders />
+                  </ProtectedRoute>
+                }
+              />
+
               {/* Неизвестные маршруты */}
               <Route path='*' element={<NotFound404 />} />
             </Routes>
@@ -98,14 +137,6 @@ const App = () => {
             {/* Роутинг модальных окон (динамические маршруты) */}
             {background && (
               <Routes>
-                <Route
-                  path='/ingredients/:id'
-                  element={
-                    <Modal title='Ингредиент' onClose={onClose}>
-                      <IngredientDetails />
-                    </Modal>
-                  }
-                />
                 <Route
                   path='/feed/:number'
                   element={
@@ -117,8 +148,26 @@ const App = () => {
                     </Modal>
                   }
                 />
+                <Route
+                  path='/ingredients/:id'
+                  element={
+                    <Modal title='Ингредиент' onClose={onClose}>
+                      <IngredientDetails />
+                    </Modal>
+                  }
+                />
 
-                {/* <Route path='/feed/:number' element={<ModalOrderInfo />} /> */}
+                {/* Защищенные маршруты с модальными окнами */}
+                <Route
+                  path='/profile/orders/:number'
+                  element={
+                    <ProtectedRoute>
+                      <Modal title='Ингредиент' onClose={onClose}>
+                        <OrderInfo />
+                      </Modal>
+                    </ProtectedRoute>
+                  }
+                />
               </Routes>
             )}
           </>

@@ -62,10 +62,12 @@ export type TFeedsResponse = TServerResponse<{
   totalToday: number; //выполнено заказов за сегодня
 }>;
 
+/** ОТВЕТ СЕРВЕРА НА ЗАПРОС ЗАКАЗОВ АВТОРИЗОВАННОГО ПОЛЬЗОВАТЕЛЯ */
 export type TOrdersResponse = TServerResponse<{
-  data: TOrder[];
+  data: TOrder[]; // заказы
 }>;
 
+/** ДАННЫЕ СОЗДАННОГО ЗАКАЗА */
 export type TNewOrderResponse = TServerResponse<{
   order: TOrder;
   name: string;
@@ -94,28 +96,36 @@ export type TRegisterData = {
 
 //! vvk -------------------------------------------------------------
 
+//? БАЗОВЫЕ ТИПЫ ------------------------------------------
+
 /** ДАННЫЕ, ИЗВЛЕЧЕННЫЕ ИЗ ОТВЕТА СЕРВЕРА */
 export type ExtractResponseData<T> =
   T extends TServerResponse<infer U> ? U : never;
 
+/** ДАННЫЕ ИЗ ОТВЕТА СЕРВЕРА С ПОЛЯМИ СТАТУСА ВЫПОЛНЕНИЯ ЗАПРОСА */
+export type TResponseDataWithRequestStatus<T> = {
+  isRequested: boolean; // запрос в процессе обработки?
+  error: string | null; // сообщение об ошибке запроса
+} & ExtractResponseData<T>;
+
+//? ПРИКЛАДНЫЕ ТИПЫ ---------------------------------------
+
 /** STORE STATE ИНГРЕДИЕНТОВ */
-export interface TIngredientsState extends ExtractResponseData<TIngredientsResponse> {
-  loading: boolean; // запрос выполняется?
-  error: string | null; // сообщение об ошибке
-}
+export type TIngredientsState =
+  TResponseDataWithRequestStatus<TIngredientsResponse>;
 
 /** STORE STATE ПОЛЬЗОВАТЕЛЯ (БЕЗ ТОКЕНОВ) */
-export interface TUserState extends Omit<
-  ExtractResponseData<TAuthResponse>,
+export type TUserState = Omit<
+  TResponseDataWithRequestStatus<TAuthResponse>,
   'refreshToken' | 'accessToken'
-> {
+> & {
   isAuthenticated: boolean; // user аутентифицирован?
-  loading: boolean; // запрос выполняется?
-  error: string | null; // сообщение об ошибке
-}
+};
 
 /** STORE STATE ЛЕНТЫ ЗАКАЗОВ */
-export interface IFeedsState extends ExtractResponseData<TFeedsResponse> {
-  loading: boolean; // запрос выполняется?
-  error: string | null; // сообщение об ошибке
-}
+export type TFeedsState = TResponseDataWithRequestStatus<TFeedsResponse>;
+
+/** STORE STATE ЗАКАЗОВ ПОЛЬЗОВАТЕЛЯ */
+export type TOrdersState = TResponseDataWithRequestStatus<TOrdersResponse> & {
+  lastOrder: TNewOrderResponse | null; // последний созданный заказ
+};
