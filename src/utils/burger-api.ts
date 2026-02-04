@@ -91,8 +91,9 @@ export const getOrdersApi = () =>
  * @param {string[]} data Массив идентификаторов булки и ингредиентов
  * @return {Promise<TNewOrderResponse>} Данные созданного заказа
  */
-export const orderBurgerApi = (data: string[]) =>
-  fetchWithRefresh<TNewOrderResponse>(`${URL}/orders`, {
+export const orderBurgerApi = (data: string[]) => {
+  console.log('ACCESS TOKEN', getCookie('accessToken'), data);
+  return fetchWithRefresh<TNewOrderResponse>(`${URL}/orders`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json;charset=utf-8',
@@ -105,6 +106,7 @@ export const orderBurgerApi = (data: string[]) =>
     if (data?.success) return data;
     return Promise.reject(data);
   });
+};
 
 export const getOrderByNumberApi = (number: number) =>
   fetch(`${URL}/orders/${number}`, {

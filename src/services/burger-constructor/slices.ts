@@ -1,14 +1,9 @@
 import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { TConstructorIngredient, TIngredient } from '@utils-types';
+import { IBurgerConstructorState, TIngredient } from '@utils-types';
 import { v4 as uuidv4 } from 'uuid';
 
-export interface IBurgerConstructorState {
-  bun: TConstructorIngredient | undefined;
-  ingredients: TConstructorIngredient[];
-}
-
 const initialState: IBurgerConstructorState = {
-  bun: undefined,
+  bun: null,
   ingredients: []
 };
 
@@ -92,11 +87,16 @@ export const burgerConstructorSlice = createSlice({
       if (currentIndex === -1 || currentIndex === state.ingredients.length - 1)
         return;
 
-      // Перемещение ингредиента вверх
+      // Перемещение ингредиента вниз
       const newIngredients = [...state.ingredients];
       const [item] = newIngredients.splice(currentIndex, 1);
       newIngredients.splice(currentIndex + 1, 0, item);
       state.ingredients = newIngredients;
+    },
+    //! ** Очистка конструктора */
+    clearConstructor: (state) => {
+      state.bun = null;
+      state.ingredients = [];
     }
   },
   selectors: {
@@ -156,7 +156,7 @@ export const burgerConstructorSlice = createSlice({
   }
 });
 
-export const { addItem, delItem, moveUpItem, moveDownItem } =
+export const { addItem, delItem, moveUpItem, moveDownItem, clearConstructor } =
   burgerConstructorSlice.actions;
 export const {
   selectConstructorItems,

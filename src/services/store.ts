@@ -3,13 +3,15 @@ import { useDispatch, useSelector } from 'react-redux';
 import { burgerConstructorSlice } from './burger-constructor/slices';
 import { feedsSlice } from './feeds/slices.';
 import { ingredientsSlice } from './ingredients/slices';
+import { ordersSlice } from './orders/slices';
 import { userSlice } from './user/slice';
 
 const rootReducer = combineSlices(
-  ingredientsSlice,
-  burgerConstructorSlice,
-  userSlice,
-  feedsSlice
+  ingredientsSlice, // ингредиенты
+  burgerConstructorSlice, // конструктор бургера
+  userSlice, // пользователь
+  feedsSlice, // лента заказов
+  ordersSlice // заказы пользователя
 );
 
 const store = configureStore({

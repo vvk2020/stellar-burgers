@@ -4,8 +4,9 @@ import {
   logoutApi,
   registerUserApi
 } from '../../utils/burger-api';
-import { setCookie } from '../../utils/cookie';
+import { deleteCookie, setCookie } from '../../utils/cookie';
 import { TLoginData, TRegisterData } from '../../utils/types';
+import { delUser } from './slice';
 
 /** ASYNC ACTION РЕГИСТРАЦИИ ПОЛЬЗОВАТЕЛЯ НА СЕРВЕРЕ */
 export const registerUser = createAsyncThunk(
@@ -46,6 +47,20 @@ export const loginUser = createAsyncThunk(
 );
 
 /** ASYNC ACTION LOGOUT ПОЛЬЗОВАТЕЛЯ */
-export const logoutUser = createAsyncThunk('user/logout', async () =>
-  logoutApi()
+export const logoutUser = createAsyncThunk(
+  'user/logout',
+  async (_, { dispatch }) => {
+    try {
+      const resp = await logoutApi();
+      console.log('LOGOUT', resp);
+      // Удаление токенов
+      localStorage.clear(); // refreshToken
+      deleteCookie('accessToken'); // accessToken
+      // Удаление данных пользователя из store
+      dispatch(delUser());
+      return resp;
+    } catch (error: any) {
+      return Promise.reject(error.message || 'Logout-ошибка');
+    }
+  }
 );

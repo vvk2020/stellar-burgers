@@ -127,5 +127,11 @@ export type TFeedsState = TResponseDataWithRequestStatus<TFeedsResponse>;
 
 /** STORE STATE ЗАКАЗОВ ПОЛЬЗОВАТЕЛЯ */
 export type TOrdersState = TResponseDataWithRequestStatus<TOrdersResponse> & {
-  lastOrder: TNewOrderResponse | null; // последний созданный заказ
+  lastOrder: ExtractResponseData<TNewOrderResponse> | null; // последний созданный заказ и его название
 };
+
+/** STORE STATE КОНСТРУКТОРА БУРГЕРА */
+export interface IBurgerConstructorState {
+  bun: TConstructorIngredient | null;
+  ingredients: TConstructorIngredient[];
+}

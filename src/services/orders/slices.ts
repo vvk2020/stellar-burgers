@@ -27,6 +27,7 @@ export const ordersSlice = createSlice({
       .addCase(createOrder.rejected, (state, action) => {
         state.isRequested = false;
         state.error = action.error.message || 'Ошибка запроса ленты заказов';
+        console.error(action.error);
       })
       // Запрос ленты заказов успешно завершен
       .addCase(createOrder.fulfilled, (state, action) => {
@@ -38,36 +39,13 @@ export const ordersSlice = createSlice({
       });
   },
   selectors: {
-    // /** Селектор ленты заказов */
-    // selectFeedsOrders: (state: IFeedsState) => state.orders,
-    // /** Селектор статистики заказов (total, totalToday) */
-    // selectFeedsStat: createSelector(
-    //   [
-    //     (state: IFeedsState) => state.total,
-    //     (state: IFeedsState) => state.totalToday
-    //   ],
-    //   (total, totalToday) => ({ total, totalToday })
-    // ),
-    // /** Селектор заказа из ленты по его number */
-    // selectFeedsOrderByNumber: createSelector(
-    //   [
-    //     (state: IFeedsState) => state.orders,
-    //     (state: IFeedsState, orderNumber: number) => orderNumber
-    //   ],
-    //   (orders, orderNumber) => {
-    //     if (!orderNumber) return null;
-    //     return orders.find((order) => order.number === orderNumber) || null;
-    //   }
-    // ),
-
     /** Последний созданный заказ */
-    selectLastOrder: (state: TOrdersState) => state.lastOrder
+    selectLastOrder: (state: TOrdersState) => state.lastOrder,
+
+    /** Селектор статуса загрузки ингредиентов */
+    selectOrdersRequestState: (state: TOrdersState) => state.isRequested
   }
 });
 
-export const {
-  // selectFeedsOrders,
-  // selectFeedsStat,
-  // selectFeedsOrderByNumber,
-  // selectFeedsLoadingState
-} = ordersSlice.selectors;
+export const { selectLastOrder, selectOrdersRequestState } =
+  ordersSlice.selectors;

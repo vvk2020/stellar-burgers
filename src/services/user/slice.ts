@@ -14,7 +14,12 @@ const initialState: TUserState = {
 export const userSlice = createSlice({
   name: 'user',
   initialState,
-  reducers: {},
+  reducers: {
+    /** Удаление данных о пользователе и его авторизации */
+    delUser: (state) => {
+      state = initialState;
+    }
+  },
   extraReducers: (builder) => {
     builder
       //! РЕГИСТРАЦИЯ ПОЛЬЗОВАТЕЛЯ
@@ -67,6 +72,8 @@ export const userSlice = createSlice({
           state.user = action.payload.user; // передача данных пользователя
         }
       });
+
+    // TODO MatchError - обработка всех rejected в одном блоке ?
   },
   selectors: {
     /** Селектор статуса завершения авторизации/регистрации */
@@ -80,8 +87,7 @@ export const userSlice = createSlice({
   }
 });
 
-// export const { addTodo, toggleTodo, setFilter, clearCompleted } =
-//   todosSlice.actions;
+export const { delUser } = userSlice.actions;
 export const { selectUser, selectUserRequestStatus, selectUserAuthStatus } =
   userSlice.selectors;
 

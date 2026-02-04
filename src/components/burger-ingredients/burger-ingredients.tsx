@@ -1,7 +1,7 @@
 import { TTabMode } from '@utils-types';
 import { FC, useEffect, useRef, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
-import { useIngredientsByType } from '../../services/hooks/useIngredientsByType';
+import { useIngredientsByType } from '../../hooks/useIngredientsByType';
 import { BurgerIngredientsUI } from '../ui/burger-ingredients';
 
 export const BurgerIngredients: FC = () => {

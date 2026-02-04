@@ -2,6 +2,7 @@ import { AppHeader, IngredientDetails, Modal, OrderInfo } from '@components';
 import {
   ConstructorPage,
   Feed,
+  ForgotPassword,
   Login,
   NotFound404,
   Profile,
@@ -37,31 +38,46 @@ const App = () => {
   // Handler возврата на предыдущий маршрут при закрытии Modal
   const onClose = () => navigate(-1);
 
-  //! Авторизация
-  useEffect(() => {
-    // // Регистрация
-    // dispatch(
-    //   registerUser({
-    //     email: `vvk${v4()}@yandex.ru`,
-    //     name: 'vvk20188',
-    //     password: 'qwertyКУ78+++@'
-    //   })
-    // );
-    // Аутентификация по логину и паролю
-    // dispatch(
-    //   loginUser({
-    //     email: 'vvkb23dae6e-afa2-4f4c-b12a-1c952c1441e4@yandex.ru',
-    //     password: 'qwertyКУ78+++@'
-    //   })
-    // );
-    // if (userToken) {
-    //   // token есть => запрос пользователя
-    //   dispatch(loginUser({ token: userToken }));
-    // } else {
-    //   // token нет => отправка экшен init()
-    //   dispatch(init());
-    // }
-  }, []);
+  // //! Авторизация
+  // useEffect(
+  //   () =>
+  //     // // Регистрация
+  //     // dispatch(
+  //     //   registerUser({
+  //     //     email: `vvk${v4()}@yandex.ru`,
+  //     //     name: 'vvk20188',
+  //     //     password: 'qwertyКУ78+++@'
+  //     //   })
+  //     // );
+  //     // // Аутентификация по логину и паролю
+  //     // dispatch(
+  //     //   loginUser({
+  //     //     email: 'vvkb23dae6e-afa2-4f4c-b12a-1c952c1441e4@yandex.ru',
+  //     //     password: 'qwertyКУ78+++@'
+  //     //   })
+  //     // );
+  //     // if (userToken) {
+  //     //   // token есть => запрос пользователя
+  //     //   dispatch(loginUser({ token: userToken }));
+  //     // } else {
+  //     //   // token нет => отправка экшен init()
+  //     //   dispatch(init());
+  //     // }
+  //     () => {
+  //       console.log('LOGOUT 0');
+  //       dispatch(logoutUser());
+  //     },
+  //   [dispatch]
+  // );
+
+  // Logout пользователя при загрузке страницы
+  // useEffect(() =>
+  //   // Cleanup только для logout
+  //   {
+  //     console.clear();
+  //     console.log('App unmounted - logout');
+  //     dispatch(logoutUser());
+  //   }, []);
 
   return (
     <>
@@ -92,7 +108,7 @@ const App = () => {
               <Route
                 path='/login'
                 element={
-                  <ProtectedRoute>
+                  <ProtectedRoute onlyUnAuth>
                     <Login />
                   </ProtectedRoute>
                 }
@@ -100,7 +116,7 @@ const App = () => {
               <Route
                 path='/register'
                 element={
-                  <ProtectedRoute>
+                  <ProtectedRoute onlyUnAuth>
                     <Register />
                   </ProtectedRoute>
                 }
@@ -108,15 +124,15 @@ const App = () => {
               <Route
                 path='/forgot-password'
                 element={
-                  <ProtectedRoute>
-                    <ResetPassword />
+                  <ProtectedRoute onlyUnAuth>
+                    <ForgotPassword />
                   </ProtectedRoute>
                 }
               />
               <Route
                 path='/reset-password'
                 element={
-                  <ProtectedRoute>
+                  <ProtectedRoute onlyUnAuth>
                     <ResetPassword />
                   </ProtectedRoute>
                 }
