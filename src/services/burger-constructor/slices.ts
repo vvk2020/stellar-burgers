@@ -150,6 +150,7 @@ export const burgerConstructorSlice = createSlice({
         if (Array.isArray(ingredients)) {
           ingredients.forEach((item) => ids.push(item.id));
         }
+        // if (bun) ids.push(bun.id);
         return ids;
       }
     )

@@ -6,7 +6,6 @@ import {
 } from '../../utils/burger-api';
 import { deleteCookie, setCookie } from '../../utils/cookie';
 import { TLoginData, TRegisterData } from '../../utils/types';
-import { delUser } from './slice';
 
 /** ASYNC ACTION РЕГИСТРАЦИИ ПОЛЬЗОВАТЕЛЯ НА СЕРВЕРЕ */
 export const registerUser = createAsyncThunk(
@@ -56,8 +55,6 @@ export const logoutUser = createAsyncThunk(
       // Удаление токенов
       localStorage.clear(); // refreshToken
       deleteCookie('accessToken'); // accessToken
-      // Удаление данных пользователя из store
-      dispatch(delUser());
       return resp;
     } catch (error: any) {
       return Promise.reject(error.message || 'Logout-ошибка');

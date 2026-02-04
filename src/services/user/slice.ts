@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { TUserState } from '../../utils/types';
-import { loginUser, registerUser } from './actions';
+import { loginUser, logoutUser, registerUser } from './actions';
 
 /** НАЧАЛЬНЫЙ STATE ПОЛЬЗОВАТЕЛЯ */
 const initialState: TUserState = {
@@ -17,12 +17,15 @@ export const userSlice = createSlice({
   reducers: {
     /** Удаление данных о пользователе и его авторизации */
     delUser: (state) => {
-      state = initialState;
+      console.log('delUser');
+      state.isAuthenticated = false; // user не аутентифицирован
+      state.user = null; // сброс текущего user
+      state.error = null; // ошибок нет
     }
   },
   extraReducers: (builder) => {
     builder
-      //! РЕГИСТРАЦИЯ ПОЛЬЗОВАТЕЛЯ
+      // РЕГИСТРАЦИЯ ПОЛЬЗОВАТЕЛЯ
 
       // Перед регистрацией
       .addCase(registerUser.pending, (state) => {
@@ -47,20 +50,20 @@ export const userSlice = createSlice({
         }
       })
 
-      //! АВТОРИЗАЦИЯ ПОЛЬЗОВАТЕЛЯ
+      // АВТОРИЗАЦИЯ ПОЛЬЗОВАТЕЛЯ
 
       // Перед авторизацией
       .addCase(loginUser.pending, (state) => {
         state.isRequested = true; // авторизация запущена
         state.isAuthenticated = false; // user не аутентифицирован
-        state.user = null; // сброс текущего user
+        state.user = null;
         state.error = null;
       })
 
       // Аторизация завершена с ошибкой
       .addCase(loginUser.rejected, (state, action) => {
         state.isRequested = false; // авторизация не выполняется
-        state.error = action.error.message || 'Ошибка авторизации'; // передача ошибки
+        state.error = action.error.message || 'Ошибка авторизации';
       })
 
       // Авторизация успешно пройдена
@@ -69,8 +72,29 @@ export const userSlice = createSlice({
         state.isRequested = false; // авторизация не выполняется
         if (action.payload.success) {
           state.isAuthenticated = true; // авторизация ✅
-          state.user = action.payload.user; // передача данных пользователя
+          state.user = action.payload.user;
         }
+      })
+
+      //! LOGOUT ПОЛЬЗОВАТЕЛЯ
+
+      // Перед авторизацией
+      .addCase(logoutUser.pending, (state) => {
+        state.isRequested = true; // logout запущена
+        state.isAuthenticated = false; // user не аутентифицирован
+        state.user = null;
+        state.error = null;
+      })
+
+      // Аторизация завершена с ошибкой
+      .addCase(logoutUser.rejected, (state, action) => {
+        state.isRequested = false; // logout не выполняется
+        state.error = action.error.message || 'Logout-ошибка';
+      })
+
+      // Авторизация успешно пройдена
+      .addCase(logoutUser.fulfilled, (state) => {
+        state.isRequested = false; // logout не выполняется
       });
 
     // TODO MatchError - обработка всех rejected в одном блоке ?
