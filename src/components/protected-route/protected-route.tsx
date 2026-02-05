@@ -10,13 +10,11 @@ export type ProtectedRouteProps = {
 };
 
 export const ProtectedRoute = ({
-  onlyUnAuth,
+  onlyUnAuth = false,
   children
-}: ProtectedRouteProps) => {
+}: ProtectedRouteProps): React.JSX.Element => {
   const isAuthRequested = useAppSelector(selectUserRequestStatus); // статус: авторизация/регистрация выполняется?
-  // const isAuthChecked = useAppSelector(selectUserLoadingState); //! состояния загрузки пользователя ИЛИ LOADING ???
   const user = useAppSelector(selectUser); // данные пользователя
-  // const userAuthStatus = useAppSelector(selectUserAuthStatus); // данные пользователя
   const location = useLocation();
 
   // Если авторизация/регистрация не завершена, то показываем Preloader
@@ -24,22 +22,33 @@ export const ProtectedRoute = ({
     return <Preloader />;
   }
 
-  // Если маршрут для авторизованного пользователя, но он не авторизован, то редирект на /login
+  /** ВАРИАНТЫ "ТИП МАРШРУТА - ТИП ПОЛЬЗОВАТЕЛЯ"*/
+
+  // 1. Если маршрут для авторизованного пользователя, но он НЕ авторизован, то редирект на /login
   if (!onlyUnAuth && !user) {
-    // если пользователя в хранилище нет, то делаем редирект
-    return <Navigate replace to='/login' state={{ from: location }} />;
+    // если пользователя в хранилище нет, то редирект на страницу автоирзации
+    return <Navigate to='/login' state={{ from: location }} />;
+    //! return <Navigate replace to='/login' state={{ from: location }} />;
   }
 
-  // Если маршрут для неавторизованного пользователя, но он авторизован при обратном редиректе
-  // получаем данные о месте назначения редиректа из объекта location.state
+  // 2. Если маршрут для НЕавторизованного пользователя, но он авторизован, то при обратном
+  // редиректе получаем данные о месте назначения редиректа из объекта location.state, либо
+  // при их отсутствии - редирект на главную страницу
   if (onlyUnAuth && user) {
-    // В случае, если объекта location.state?.from нет, если зашли на страницу логина по прямому URL
-    // создаём объект c указанием адреса и делаем переадресацию на главную страницу
-    const from = location.state?.from || { pathname: '/' };
-    return <Navigate replace to={from} />;
+    // Перенаправляем пользователя туда, куда он хотел (если есть state) или на главную страницу
+    const { from } = location.state ?? { from: { pathname: '/' } };
+    return <Navigate to={from} />;
 
-    //TODO Проверить по WS11 - вроде должно быть 3 if() c onlyUnAuth и user
+    //! В случае, если объекта location.state?.from нет, если зашли на страницу логина по прямому URL
+    //! создаём объект c указанием адреса и делаем переадресацию на главную страницу
+    //! const from = location.state?.from || { pathname: '/' };
+    // return <Navigate replace to={from} />;
   }
+
+  // 3. Если маршрут для НЕавторизованных пользователей и пользователь НЕ авторизован
+  // ИЛИ
+  // 4. Если маршрут для авторизованных пользователей и пользователь авторизован
+  // ТО рендер children-компонента
 
   return children;
 };

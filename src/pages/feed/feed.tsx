@@ -1,27 +1,24 @@
 import { FeedUI } from '@ui-pages';
-import { TOrder } from '@utils-types';
-import { FC, useCallback, useEffect } from 'react';
+import { FC, useEffect } from 'react';
 import { Preloader } from '../../components/ui';
 import { fetchFeeds } from '../../services/feeds/actions';
 import {
   selectFeedsOrders,
   selectFeedsRequestStatus
-} from '../../services/feeds/slices.';
+} from '../../services/feeds/slices';
 import { useAppDispatch, useAppSelector } from '../../services/store';
 
 export const Feed: FC = () => {
-  // const constructorItems = useAppSelector(selectFeedsOrders); // лента заказов
-  const orders: TOrder[] = useAppSelector(selectFeedsOrders); // лента заказов
+  const orders = useAppSelector(selectFeedsOrders); // лента заказов
   const dispatch = useAppDispatch();
-  const isFeedsRequested = useAppSelector(selectFeedsRequestStatus); // состояния загрузки пользователя
-
+  const isFeedsRequested = useAppSelector(selectFeedsRequestStatus); // состояния загрузки
   useEffect(() => {
-    dispatch(fetchFeeds()); // запрос заказов в ленту
-  }, [dispatch]);
-
-  const handleGetFeeds = useCallback(() => {
     dispatch(fetchFeeds());
-  }, [dispatch]);
+  }, []);
+
+  const handleGetFeeds = () => {
+    if (!isFeedsRequested) dispatch(fetchFeeds());
+  };
 
   if (isFeedsRequested) {
     return <Preloader />;

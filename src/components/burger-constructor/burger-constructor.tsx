@@ -2,7 +2,6 @@ import { BurgerConstructorUI } from '@ui';
 import { FC } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import {
-  clearConstructor,
   selectConstructorItems,
   selectIngredientsIds,
   selectItemsTotal
@@ -11,7 +10,7 @@ import { createOrder } from '../../services/orders/actions';
 import {
   deleteLastOrder,
   selectLastOrder,
-  selectOrdersRequestState
+  selectOrdersRequestStatus
 } from '../../services/orders/slices';
 import { useAppDispatch, useAppSelector } from '../../services/store';
 import { selectUserAuthStatus } from '../../services/user/slice';
@@ -25,7 +24,7 @@ export const BurgerConstructor: FC = () => {
   const price = useAppSelector(selectItemsTotal); // стоимость бургера
   const ids = useAppSelector(selectIngredientsIds); // _id булки и ингредиентов бургера в конструкторе
   const isAuthUser = useAppSelector(selectUserAuthStatus); // флаг: авторизованный пользователь?
-  const orderRequest = useAppSelector(selectOrdersRequestState); // флаг: заказ выполняется?
+  const orderRequest = useAppSelector(selectOrdersRequestStatus); // флаг: заказ выполняется?
 
   // Данные последнего зарегистрированного заказа
   const lastOrder = useAppSelector(selectLastOrder);
@@ -45,8 +44,6 @@ export const BurgerConstructor: FC = () => {
 
   /** Обработчик закрытия модального окна зарегистрированного заказа */
   const closeOrderModal = () => {
-    // Очистка бургер-конструктора
-    dispatch(clearConstructor());
     // Очистка последнего заказа (для закрытия его модалки)
     if (orderModalData) dispatch(deleteLastOrder());
   };

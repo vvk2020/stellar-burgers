@@ -14,7 +14,6 @@ import { Preloader } from '@ui';
 import { useEffect } from 'react';
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import '../../index.css';
-import { fetchFeeds } from '../../services/feeds/actions';
 import { fetchIngredients } from '../../services/ingredients/actions';
 import { selectIngredientsRequestState } from '../../services/ingredients/slices';
 import { useAppDispatch, useAppSelector } from '../../services/store';
@@ -22,62 +21,19 @@ import { ProtectedRoute } from '../protected-route';
 import styles from './app.module.css';
 
 const App = () => {
-  const dispatch = useAppDispatch();
-  const isProcesing = useAppSelector(selectIngredientsRequestState); // флаг: ингредиенты загружаются?
-
   const navigate = useNavigate();
   const location = useLocation();
+  const dispatch = useAppDispatch();
+  const isIngredientsRequested = useAppSelector(selectIngredientsRequestState); // ингредиенты загружаются?
 
   useEffect(() => {
-    dispatch(fetchIngredients()); // запрос всех ингредиентов
-    dispatch(fetchFeeds()); // запрос заказов в ленту
-  }, [dispatch]);
+    if (!isIngredientsRequested) dispatch(fetchIngredients()); // запрос всех ингредиентов
+  }, []);
 
   const background = location.state?.background; // location предыдущего маршрута
 
   // Handler возврата на предыдущий маршрут при закрытии Modal
   const onClose = () => navigate(-1);
-
-  // //! Авторизация
-  // useEffect(
-  //   () =>
-  //     // // Регистрация
-  //     // dispatch(
-  //     //   registerUser({
-  //     //     email: `vvk${v4()}@yandex.ru`,
-  //     //     name: 'vvk20188',
-  //     //     password: 'qwertyКУ78+++@'
-  //     //   })
-  //     // );
-  //     // // Аутентификация по логину и паролю
-  //     // dispatch(
-  //     //   loginUser({
-  //     //     email: 'vvkb23dae6e-afa2-4f4c-b12a-1c952c1441e4@yandex.ru',
-  //     //     password: 'qwertyКУ78+++@'
-  //     //   })
-  //     // );
-  //     // if (userToken) {
-  //     //   // token есть => запрос пользователя
-  //     //   dispatch(loginUser({ token: userToken }));
-  //     // } else {
-  //     //   // token нет => отправка экшен init()
-  //     //   dispatch(init());
-  //     // }
-  //     () => {
-  //       console.log('LOGOUT 0');
-  //       dispatch(logoutUser());
-  //     },
-  //   [dispatch]
-  // );
-
-  // Logout пользователя при загрузке страницы
-  // useEffect(() =>
-  //   // Cleanup только для logout
-  //   {
-  //     console.clear();
-  //     console.log('App unmounted - logout');
-  //     dispatch(logoutUser());
-  //   }, []);
 
   return (
     <>
@@ -85,7 +41,7 @@ const App = () => {
         <AppHeader />
 
         {/* В процессе загрузки ингредиентов показываем Preloader */}
-        {isProcesing ? (
+        {isIngredientsRequested ? (
           <Preloader />
         ) : (
           <>
@@ -178,7 +134,10 @@ const App = () => {
                   path='/profile/orders/:number'
                   element={
                     <ProtectedRoute>
-                      <Modal title='Ингредиент' onClose={onClose}>
+                      <Modal
+                        title={`#${location.pathname.split('/').pop()}`}
+                        onClose={onClose}
+                      >
                         <OrderInfo />
                       </Modal>
                     </ProtectedRoute>

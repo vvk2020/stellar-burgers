@@ -32,7 +32,6 @@ export const loginUser = createAsyncThunk(
   async (data: TLoginData) => {
     try {
       const resp = await loginUserApi(data);
-      console.log('LOGIN', resp);
       // Сохраняем токены после успешной регистрации
       if (resp.success && resp.accessToken && resp.refreshToken) {
         setCookie('accessToken', resp.accessToken);

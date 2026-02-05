@@ -39,6 +39,7 @@ export const userSlice = createSlice({
       .addCase(registerUser.rejected, (state, action) => {
         state.isRequested = false; // регистрация не выполняется
         state.error = action.error.message || 'Ошибка регистрации';
+        console.error(state.error);
       })
 
       // Регистрация  успешно завершена
@@ -64,6 +65,7 @@ export const userSlice = createSlice({
       .addCase(loginUser.rejected, (state, action) => {
         state.isRequested = false; // авторизация не выполняется
         state.error = action.error.message || 'Ошибка авторизации';
+        console.error(state.error);
       })
 
       // Авторизация успешно пройдена
@@ -90,6 +92,7 @@ export const userSlice = createSlice({
       .addCase(logoutUser.rejected, (state, action) => {
         state.isRequested = false; // logout не выполняется
         state.error = action.error.message || 'Logout-ошибка';
+        console.error(state.error);
       })
 
       // Авторизация успешно пройдена

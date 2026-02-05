@@ -60,7 +60,6 @@ export const burgerConstructorSlice = createSlice({
 
       // Индекс ингредиента в массиве конструктора
       let currentIndex = state.ingredients.findIndex((item) => item.id === id);
-      console.log('currentIndex', currentIndex);
 
       // Самый верхний элемент переместить еще выше нельзя
       if (currentIndex === -1 || currentIndex === 0) return;
@@ -81,7 +80,6 @@ export const burgerConstructorSlice = createSlice({
 
       // Индекс ингредиента в массиве конструктора
       let currentIndex = state.ingredients.findIndex((item) => item.id === id);
-      console.log('currentIndex', currentIndex);
 
       // Самый нижний ингредиент переместить еще ниже нельзя
       if (currentIndex === -1 || currentIndex === state.ingredients.length - 1)

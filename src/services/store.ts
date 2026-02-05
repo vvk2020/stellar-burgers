@@ -1,7 +1,7 @@
 import { combineSlices, configureStore } from '@reduxjs/toolkit';
 import { useDispatch, useSelector } from 'react-redux';
 import { burgerConstructorSlice } from './burger-constructor/slices';
-import { feedsSlice } from './feeds/slices.';
+import { feedsSlice } from './feeds/slices';
 import { ingredientsSlice } from './ingredients/slices';
 import { ordersSlice } from './orders/slices';
 import { userSlice } from './user/slice';

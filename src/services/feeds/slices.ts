@@ -31,6 +31,7 @@ export const feedsSlice = createSlice({
       .addCase(fetchFeeds.rejected, (state, action) => {
         state.isRequested = false;
         state.error = action.error.message || 'Ошибка запроса ленты заказов';
+        console.error(state.error);
       })
 
       // Запрос ленты заказов успешно завершен

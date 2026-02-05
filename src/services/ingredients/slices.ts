@@ -12,26 +12,7 @@ const initialState: TIngredientsState = {
 export const ingredientsSlice = createSlice({
   name: 'ingredients',
   initialState,
-  reducers: {
-    //   addTodo: (state, action: PayloadAction<Todo>) => {
-    //     state.todos.push(action.payload);
-    //   },
-    //   toggleTodo: (state, action: PayloadAction<string>) => {
-    //     const todo = state.todos.find((todo) => todo.id === action.payload);
-    //     if (todo) {
-    //       todo.completed = !todo.completed;
-    //     }
-    //   },
-    //   setFilter: (
-    //     state,
-    //     action: PayloadAction<"all" | "active" | "completed">
-    //   ) => {
-    //     state.filter = action.payload;
-    //   },
-    //   clearCompleted: (state) => {
-    //     state.todos = state.todos.filter((todo) => !todo.completed);
-    //   },
-  },
+  reducers: {},
   // Создание редюсеров внешних (асинхронных) actions
   extraReducers: (builder) => {
     builder
@@ -46,6 +27,7 @@ export const ingredientsSlice = createSlice({
       .addCase(fetchIngredients.rejected, (state, action) => {
         state.isRequested = false;
         state.error = action.error.message || 'Ошибка запроса ингредиентов';
+        console.error(state.error);
       });
   },
   selectors: {

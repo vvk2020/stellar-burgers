@@ -1,8 +1,9 @@
 import { TIngredient } from '@utils-types';
 import { FC, useMemo } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
-import { selectFeedsOrderByNumber } from '../../services/feeds/slices.';
+import { selectFeedsOrderByNumber } from '../../services/feeds/slices';
 import { selectIngredients } from '../../services/ingredients/slices';
+import { selectUserOrderByNumber } from '../../services/orders/slices';
 import { useAppSelector } from '../../services/store';
 import { OrderInfoUI } from '../ui/order-info';
 import { Preloader } from '../ui/preloader';
@@ -10,15 +11,24 @@ import { Preloader } from '../ui/preloader';
 export const OrderInfo: FC = () => {
   // Если background в location.state есть, то OrderInfo в модальном окне
   const location = useLocation();
+  // const dispatch = useAppDispatch();
   const isModalMode = !!location.state?.background;
+
+  //TODO Если редим НЕ модальный (переход по прямой ссылке), то запрос
+  // useEffect(() => {
+  //   if (!isModalMode) dispatch(fetchFeeds());
+  // }, []);
 
   // Номер заказа
   const { number } = useParams<{ number: string }>();
   const orderNumber = number ? parseInt(number, 10) : 0;
 
-  // Заказ из ленты по его номеру orderNumber
+  // Выбор заказа по его номеру orderNumber в заивимости от маршрута
+  // (заказы ленты выбираются из feedsSlice, пользователя - из ordersSlice)
   const orderData = useAppSelector((state) =>
-    selectFeedsOrderByNumber(state, orderNumber)
+    location.pathname.includes('/profile/orders/')
+      ? selectUserOrderByNumber(state, orderNumber)
+      : selectFeedsOrderByNumber(state, orderNumber)
   );
 
   // Ингредиенты
