@@ -16,7 +16,7 @@ export const userSlice = createSlice({
   initialState,
   reducers: {
     /** Удаление данных о пользователе и его авторизации */
-    delUser: (state) => {
+    deleteUser: (state) => {
       console.log('delUser');
       state.isAuthenticated = false; // user не аутентифицирован
       state.user = null; // сброс текущего user
@@ -111,7 +111,7 @@ export const userSlice = createSlice({
   }
 });
 
-export const { delUser } = userSlice.actions;
+export const { deleteUser } = userSlice.actions;
 export const { selectUser, selectUserRequestStatus, selectUserAuthStatus } =
   userSlice.selectors;
 

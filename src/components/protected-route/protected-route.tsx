@@ -19,8 +19,6 @@ export const ProtectedRoute = ({
   // const userAuthStatus = useAppSelector(selectUserAuthStatus); // данные пользователя
   const location = useLocation();
 
-  // console.log('user', user, 'isAuthRequested', isAuthRequested);
-
   // Если авторизация/регистрация не завершена, то показываем Preloader
   if (isAuthRequested) {
     return <Preloader />;
@@ -37,9 +35,10 @@ export const ProtectedRoute = ({
   if (onlyUnAuth && user) {
     // В случае, если объекта location.state?.from нет, если зашли на страницу логина по прямому URL
     // создаём объект c указанием адреса и делаем переадресацию на главную страницу
-    console.log('location:', location);
     const from = location.state?.from || { pathname: '/' };
     return <Navigate replace to={from} />;
+
+    //TODO Проверить по WS11 - вроде должно быть 3 if() c onlyUnAuth и user
   }
 
   return children;

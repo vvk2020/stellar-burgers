@@ -14,7 +14,16 @@ const initialState: TOrdersState = {
 export const ordersSlice = createSlice({
   name: 'orders',
   initialState,
-  reducers: {},
+  reducers: {
+    /** Удаление данных о последнем заказе */
+    deleteLastOrder: (state) => {
+      console.log('deleteLastOrder');
+      state.lastOrder = null;
+      // state.user = null; // сброс текущего user
+      // state.error = null; // ошибок нет
+      //TODO Вызвать обновление data - массива заказов в store ?
+    }
+  },
   extraReducers: (builder) => {
     builder
       // Перед запросом ленты заказов
@@ -47,5 +56,6 @@ export const ordersSlice = createSlice({
   }
 });
 
+export const { deleteLastOrder } = ordersSlice.actions;
 export const { selectLastOrder, selectOrdersRequestState } =
   ordersSlice.selectors;

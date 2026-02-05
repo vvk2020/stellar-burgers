@@ -146,11 +146,11 @@ export const burgerConstructorSlice = createSlice({
       ],
       (bun, ingredients) => {
         const ids: string[] = [];
-        if (bun) ids.push(bun.id);
+        if (bun) ids.push(bun._id);
         if (Array.isArray(ingredients)) {
-          ingredients.forEach((item) => ids.push(item.id));
+          ingredients.forEach((item) => ids.push(item._id));
         }
-        // if (bun) ids.push(bun.id);
+        if (bun) ids.push(bun._id);
         return ids;
       }
     )

@@ -18,8 +18,6 @@ export const FeedInfo: FC = () => {
   const orders: TOrder[] = useAppSelector(selectFeedsOrders);
   const feed = useAppSelector(selectFeedsStat);
 
-  console.log('FEEDINFO', feed);
-
   const readyOrders = getOrders(orders, 'done');
   const pendingOrders = getOrders(orders, 'pending');
 
