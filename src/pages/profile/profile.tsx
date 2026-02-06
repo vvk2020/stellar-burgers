@@ -1,18 +1,14 @@
 import { ProfileUI } from '@ui-pages';
 import { FC, SyntheticEvent, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAppSelector } from '../../services/store';
+import { useAppDispatch, useAppSelector } from '../../services/store';
+import { updateUser } from '../../services/user/actions';
 import { selectUser } from '../../services/user/slice';
 
 export const Profile: FC = () => {
   const user = useAppSelector(selectUser);
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
-
-  // /** TODO: взять переменную из стора */
-  // const user = {
-  //   name: '',
-  //   email: ''
-  // };
 
   if (!user) navigate('/login');
 
@@ -37,6 +33,7 @@ export const Profile: FC = () => {
 
   const handleSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
+    if (formValue) dispatch(updateUser(formValue));
   };
 
   const handleCancel = (e: SyntheticEvent) => {

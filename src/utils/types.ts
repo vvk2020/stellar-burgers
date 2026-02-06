@@ -94,6 +94,9 @@ export type TRegisterData = {
   password: string;
 };
 
+/** ОТВЕТ СЕРВЕРА НА ЗАПРОС ИЗМНЕНИЯ ДАННЫХ ПОЛЬЗОВАТЕЛЯ */
+export type TUserResponse = TServerResponse<{ user: TUser }>;
+
 //! vvk -------------------------------------------------------------
 
 //? БАЗОВЫЕ ТИПЫ ------------------------------------------
@@ -123,7 +126,9 @@ export type TUserState = Omit<
 };
 
 /** STORE STATE ЛЕНТЫ ЗАКАЗОВ */
-export type TFeedsState = TResponseDataWithRequestStatus<TFeedsResponse>;
+export type TFeedsState = TResponseDataWithRequestStatus<TFeedsResponse> & {
+  order: TOrder | null; // выбранный заказ (запрошенный с сервера)
+};
 
 /** STORE STATE ЗАКАЗОВ ПОЛЬЗОВАТЕЛЯ */
 export type TOrdersState = TResponseDataWithRequestStatus<TOrdersResponse> & {

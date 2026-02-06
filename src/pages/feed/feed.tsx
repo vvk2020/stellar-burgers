@@ -9,9 +9,10 @@ import {
 import { useAppDispatch, useAppSelector } from '../../services/store';
 
 export const Feed: FC = () => {
-  const orders = useAppSelector(selectFeedsOrders); // лента заказов
   const dispatch = useAppDispatch();
+  const orders = useAppSelector(selectFeedsOrders); // лента заказов
   const isFeedsRequested = useAppSelector(selectFeedsRequestStatus); // состояния загрузки
+
   useEffect(() => {
     dispatch(fetchFeeds());
   }, []);

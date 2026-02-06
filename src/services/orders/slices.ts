@@ -18,12 +18,11 @@ export const ordersSlice = createSlice({
     /** Удаление данных о последнем заказе */
     deleteLastOrder: (state) => {
       state.lastOrder = null;
-      //TODO Вызвать обновление data - массива заказов в store ?
     }
   },
   extraReducers: (builder) => {
     builder
-      // АВТОРИЗОВАННОЕ ОФОРМЛЕНИЕ ЗАКАЗА БУРГЕРА ИЗ КОНСТРУКТОРА
+      //* АВТОРИЗОВАННОЕ ОФОРМЛЕНИЕ ЗАКАЗА БУРГЕРА ИЗ КОНСТРУКТОРА
       .addCase(createOrder.pending, (state) => {
         state.isRequested = true;
         state.lastOrder = null;
@@ -42,7 +41,7 @@ export const ordersSlice = createSlice({
         }
       })
 
-      // АВТОРИЗОВАННОЕ ПОЛУЧЕНИЕ ЗАКАЗОВ ПОЛЬЗОВАТЕЛЯ
+      //* АВТОРИЗОВАННОЕ ПОЛУЧЕНИЕ ЗАКАЗОВ ПОЛЬЗОВАТЕЛЯ
       .addCase(getUserOrders.pending, (state) => {
         state.isRequested = true;
         state.data = [];

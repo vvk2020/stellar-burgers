@@ -27,7 +27,7 @@ const App = () => {
   const isIngredientsRequested = useAppSelector(selectIngredientsRequestState); // ингредиенты загружаются?
 
   useEffect(() => {
-    if (!isIngredientsRequested) dispatch(fetchIngredients()); // запрос всех ингредиентов
+    dispatch(fetchIngredients()); // запрос всех ингредиентов
   }, []);
 
   const background = location.state?.background; // location предыдущего маршрута
@@ -53,14 +53,6 @@ const App = () => {
               <Route path='/feed/:number' element={<OrderInfo />} />
 
               {/* Защищенные маршруты */}
-              <Route
-                path='/profile'
-                element={
-                  <ProtectedRoute>
-                    <Profile />
-                  </ProtectedRoute>
-                }
-              />
               <Route
                 path='/login'
                 element={
@@ -90,6 +82,14 @@ const App = () => {
                 element={
                   <ProtectedRoute onlyUnAuth>
                     <ResetPassword />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path='/profile'
+                element={
+                  <ProtectedRoute>
+                    <Profile />
                   </ProtectedRoute>
                 }
               />

@@ -2,7 +2,8 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import {
   loginUserApi,
   logoutApi,
-  registerUserApi
+  registerUserApi,
+  updateUserApi
 } from '../../utils/burger-api';
 import { deleteCookie, setCookie } from '../../utils/cookie';
 import { TLoginData, TRegisterData } from '../../utils/types';
@@ -13,7 +14,6 @@ export const registerUser = createAsyncThunk(
   async (data: TRegisterData) => {
     try {
       const resp = await registerUserApi(data);
-      console.log('REGISTER', resp);
       // Сохраняем токены после успешной регистрации
       if (resp.success && resp.accessToken && resp.refreshToken) {
         setCookie('accessToken', resp.accessToken);
@@ -45,18 +45,20 @@ export const loginUser = createAsyncThunk(
 );
 
 /** ASYNC ACTION LOGOUT ПОЛЬЗОВАТЕЛЯ */
-export const logoutUser = createAsyncThunk(
-  'user/logout',
-  async (_, { dispatch }) => {
-    try {
-      const resp = await logoutApi();
-      console.log('LOGOUT', resp);
-      // Удаление токенов
-      localStorage.clear(); // refreshToken
-      deleteCookie('accessToken'); // accessToken
-      return resp;
-    } catch (error: any) {
-      return Promise.reject(error.message || 'Logout-ошибка');
-    }
+export const logoutUser = createAsyncThunk('user/logout', async () => {
+  try {
+    const resp = await logoutApi();
+    // Удаление токенов
+    localStorage.clear(); // refreshToken
+    deleteCookie('accessToken'); // accessToken
+    return resp;
+  } catch (error: any) {
+    return Promise.reject(error.message || 'Logout-ошибка');
   }
+});
+
+/** ASYNC ACTION ИЗМЕНЕНИЯ ДАННЫХ ПОЛЬЗОВАТЕЛЯ */
+export const updateUser = createAsyncThunk(
+  'user/update',
+  async (user: Partial<TRegisterData>) => updateUserApi(user)
 );

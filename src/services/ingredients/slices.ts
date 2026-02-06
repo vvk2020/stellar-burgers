@@ -3,8 +3,8 @@ import { TIngredientsState, TTabMode } from '@utils-types';
 import { fetchIngredients } from './actions';
 
 const initialState: TIngredientsState = {
-  data: [],
   isRequested: false,
+  data: [],
   error: null
 };
 
@@ -13,11 +13,12 @@ export const ingredientsSlice = createSlice({
   name: 'ingredients',
   initialState,
   reducers: {},
-  // Создание редюсеров внешних (асинхронных) actions
   extraReducers: (builder) => {
     builder
+      //* ПОЛУЧЕНИЕ ИНГРЕДИЕНТОВ
       .addCase(fetchIngredients.pending, (state) => {
         state.isRequested = true;
+        state.data = [];
         state.error = null;
       })
       .addCase(fetchIngredients.fulfilled, (state, action) => {
@@ -62,8 +63,6 @@ export const makeSelectIngredientsByType = () =>
     (ingredients, type) => ingredients.filter((item) => item.type === type)
   );
 
-// export const { addTodo, toggleTodo, setFilter, clearCompleted } =
-//   todosSlice.actions;
 export const {
   selectIngredients,
   selectIngredientsRequestState,

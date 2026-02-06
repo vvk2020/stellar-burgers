@@ -23,5 +23,3 @@ export const getUserOrders = createAsyncThunk(
   'orders/getUserOrders',
   async () => getOrdersApi()
 );
-
-//! 2. Асинхронный action запрос заказа по номеру

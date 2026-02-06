@@ -10,8 +10,6 @@ export const ProfileMenu: FC = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    console.log('handleLogout');
-
     dispatch(logoutUser());
     navigate('/login');
   };

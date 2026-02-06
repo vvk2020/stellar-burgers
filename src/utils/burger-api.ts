@@ -9,7 +9,7 @@ import {
   TRefreshResponse,
   TRegisterData,
   TServerResponse,
-  TUser
+  TUserResponse
 } from './types';
 
 const URL = process.env.BURGER_API_URL;
@@ -59,6 +59,9 @@ export const fetchWithRefresh = async <T>(
   }
 };
 
+/** НЕАВТОРИЗОВАННОЕ ПОЛУЧЕНИЕ ИНГРЕДИЕНТОВ
+ * @return {Promise<TIngredient[]>} Лента заказов
+ */
 export const getIngredientsApi = () =>
   fetch(`${URL}/ingredients`)
     .then((res) => checkResponse<TIngredientsResponse>(res))
@@ -112,6 +115,9 @@ export const orderBurgerApi = (data: string[]) =>
     return Promise.reject(data);
   });
 
+/** АВТОРИЗОВАННОЕ ПОЛУЧЕНИЕ ЗАКАЗА ПО НОМЕРУ
+ * @return {Promise<TOrderResponse>} Заказы
+ */
 export const getOrderByNumberApi = (number: number) =>
   fetch(`${URL}/orders/${number}`, {
     method: 'GET',
@@ -156,6 +162,9 @@ export const loginUserApi = (data: TLoginData) =>
       return Promise.reject(data);
     });
 
+/** АВТОРИЗОВАННОЕ ВОССТАНОВЛЕНИЕ ПАРОЛЯ ПОЛЬЗОВАТЕЛЯ ЧЕРЕЗ EMAIL
+ * @param {string} email Электронная почта
+ */
 export const forgotPasswordApi = (data: { email: string }) =>
   fetch(`${URL}/password-reset`, {
     method: 'POST',
@@ -170,6 +179,10 @@ export const forgotPasswordApi = (data: { email: string }) =>
       return Promise.reject(data);
     });
 
+/** АВТОРИЗОВАННЫЙ СБРОС ПАРОЛЯ ПОЛЬЗОВАТЕЛЯ
+ * @param {{ password: string; token: string }} data - пароль и токен
+ * @returns {Promise<{success: boolean}>} - статус изменения пароля
+ * */
 export const resetPasswordApi = (data: { password: string; token: string }) =>
   fetch(`${URL}/password-reset/reset`, {
     method: 'POST',
@@ -184,8 +197,7 @@ export const resetPasswordApi = (data: { password: string; token: string }) =>
       return Promise.reject(data);
     });
 
-type TUserResponse = TServerResponse<{ user: TUser }>;
-
+/** АВТОРИЗОВАННОЕ ПОЛУЧЕНИЕ ДАННЫХ ПОЛЬЗОВАТЕЛЯ */
 export const getUserApi = () =>
   fetchWithRefresh<TUserResponse>(`${URL}/auth/user`, {
     headers: {
@@ -193,6 +205,10 @@ export const getUserApi = () =>
     } as HeadersInit
   });
 
+/** АВТОРИЗОВАННОЕ ИЗМЕНЕНИЕ ДАННЫХ ПОЛЬЗОВАТЕЛЯ
+ * @param {{ password: string; token: string }} data - пароль и токен
+ * @returns {Promise<TUserResponse>} - статус изменения пароля
+ * */
 export const updateUserApi = (user: Partial<TRegisterData>) =>
   fetchWithRefresh<TUserResponse>(`${URL}/auth/user`, {
     method: 'PATCH',

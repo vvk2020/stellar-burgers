@@ -9,7 +9,6 @@ const modalRoot = document.getElementById('modals');
 export const Modal: FC<TModalProps> = memo(({ title, onClose, children }) => {
   useEffect(() => {
     const handleEsc = (e: KeyboardEvent) => {
-      console.log('handleEsc');
       e.key === 'Escape' && onClose();
     };
 

@@ -5,7 +5,6 @@ import { loginUser } from '../../services/user/actions';
 
 export const Login: FC = () => {
   const dispatch = useAppDispatch();
-
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 

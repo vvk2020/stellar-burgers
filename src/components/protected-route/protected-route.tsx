@@ -1,13 +1,12 @@
-import { ReactElement } from 'react';
+import { PropsWithChildren } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAppSelector } from '../../services/store';
 import { selectUser, selectUserRequestStatus } from '../../services/user/slice';
 import { Preloader } from '../ui';
 
-export type ProtectedRouteProps = {
+export interface ProtectedRouteProps extends PropsWithChildren {
   onlyUnAuth?: boolean;
-  children: ReactElement;
-};
+}
 
 export const ProtectedRoute = ({
   onlyUnAuth = false,
@@ -50,5 +49,5 @@ export const ProtectedRoute = ({
   // 4. Если маршрут для авторизованных пользователей и пользователь авторизован
   // ТО рендер children-компонента
 
-  return children;
+  return <>{children}</>;
 };

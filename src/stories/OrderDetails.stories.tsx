@@ -1,6 +1,8 @@
-import React from 'react';
-import { OrderDetailsUI } from '@ui';
 import type { Meta, StoryObj } from '@storybook/react';
+import { OrderDetailsUI } from '@ui';
+import React from 'react';
+
+console.log(React.version);
 
 const meta = {
   title: 'Example/OrderDetails',
@@ -33,6 +35,6 @@ type Story = StoryObj<typeof meta>;
 
 export const DefaultOrderDetails: Story = {
   args: {
-    orderNumber: 12
+    orderNumber: 13
   }
 };

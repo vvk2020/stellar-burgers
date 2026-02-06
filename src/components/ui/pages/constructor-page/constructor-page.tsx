@@ -1,6 +1,6 @@
+import { BurgerConstructor, BurgerIngredients } from '@components';
 import { FC } from 'react';
 import styles from './constructor-page.module.css';
-import { BurgerIngredients, BurgerConstructor } from '@components';
 
 export const ConstructorPageUI: FC = () => (
   <>

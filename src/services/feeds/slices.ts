@@ -1,11 +1,12 @@
 import { createSelector, createSlice } from '@reduxjs/toolkit';
 import { TFeedsState } from '../../utils/types';
-import { fetchFeeds } from './actions';
+import { fetchFeeds, fetchFeedsOrder } from './actions';
 
 /** НАЧАЛЬНЫЙ STATE ЛЕНТЫ ЗАКАЗОВ */
 const initialState: TFeedsState = {
   isRequested: false,
   orders: [],
+  order: null,
   total: 0,
   totalToday: 0,
   error: null
@@ -18,7 +19,7 @@ export const feedsSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      // Перед запросом ленты заказов
+      //* ПОЛУЧЕНИЕ ЛЕНТЫ ЗАКАЗОВ
       .addCase(fetchFeeds.pending, (state) => {
         state.isRequested = true;
         state.orders = [];
@@ -26,15 +27,11 @@ export const feedsSlice = createSlice({
         state.totalToday = 0;
         state.error = null;
       })
-
-      // Запрос ленты заказов завершен с ошибкой
       .addCase(fetchFeeds.rejected, (state, action) => {
         state.isRequested = false;
         state.error = action.error.message || 'Ошибка запроса ленты заказов';
         console.error(state.error);
       })
-
-      // Запрос ленты заказов успешно завершен
       .addCase(fetchFeeds.fulfilled, (state, action) => {
         state.isRequested = false;
         if (action.payload.success) {
@@ -42,6 +39,23 @@ export const feedsSlice = createSlice({
           state.total = action.payload.total;
           state.totalToday = action.payload.totalToday;
         }
+      })
+
+      //* ПОЛУЧЕНИЕ ЗАКАЗА ПО ЕГО НОМЕРУ
+      .addCase(fetchFeedsOrder.pending, (state) => {
+        state.isRequested = true;
+        order: null;
+        state.error = null;
+      })
+      .addCase(fetchFeedsOrder.rejected, (state, action) => {
+        state.isRequested = false;
+        state.error = action.error.message || 'Ошибка запроса заказа по номеру';
+        console.error(state.error);
+      })
+      .addCase(fetchFeedsOrder.fulfilled, (state, action) => {
+        state.isRequested = false;
+        if (action.payload.success)
+          state.order = action.payload.orders[0] ?? null;
       });
   },
   selectors: {
@@ -68,6 +82,8 @@ export const feedsSlice = createSlice({
         return orders.find((order) => order.number === orderNumber) || null;
       }
     ),
+    /** Заказ, полученный с сервера по его number */
+    requestFeedsOrderByNumber: (state: TFeedsState) => state.order,
 
     /** Селектор статуса загрузки ингредиентов */
     selectFeedsRequestStatus: (state: TFeedsState) => state.isRequested
@@ -78,5 +94,6 @@ export const {
   selectFeedsOrders,
   selectFeedsStat,
   selectFeedsOrderByNumber,
-  selectFeedsRequestStatus
+  selectFeedsRequestStatus,
+  requestFeedsOrderByNumber
 } = feedsSlice.selectors;

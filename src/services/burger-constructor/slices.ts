@@ -33,7 +33,7 @@ export const burgerConstructorSlice = createSlice({
     },
     /** Удаление ингредиента из конструктора по его id */
     delItem: (state, action: PayloadAction<string>) => {
-      const id = action.payload; // uuid ингредиента в конструкторе
+      const id = action.payload;
       if (!id) {
         console.error('ID ингредиента не указан');
         return;
@@ -52,7 +52,7 @@ export const burgerConstructorSlice = createSlice({
     },
     /** Перемещение вверх ингредиента в конструкторе по его id */
     moveUpItem: (state, action: PayloadAction<string>) => {
-      const id = action.payload; // uuid ингредиента в конструкторе
+      const id = action.payload;
       if (!id) {
         console.error('ID ингредиента не указан');
         return;
@@ -72,7 +72,7 @@ export const burgerConstructorSlice = createSlice({
     },
     /** Перемещение вниз ингредиента в конструкторе по его id */
     moveDownItem: (state, action: PayloadAction<string>) => {
-      const id = action.payload; // uuid ингредиента в конструкторе
+      const id = action.payload;
       if (!id) {
         console.error('ID ингредиента не указан');
         return;
@@ -91,7 +91,7 @@ export const burgerConstructorSlice = createSlice({
       newIngredients.splice(currentIndex + 1, 0, item);
       state.ingredients = newIngredients;
     },
-    //! ** Очистка конструктора */
+    /** Очистка конструктора */
     clearConstructor: (state) => {
       state.bun = null;
       state.ingredients = [];

@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { TUserState } from '../../utils/types';
-import { loginUser, logoutUser, registerUser } from './actions';
+import { loginUser, logoutUser, registerUser, updateUser } from './actions';
 
 /** НАЧАЛЬНЫЙ STATE ПОЛЬЗОВАТЕЛЯ */
 const initialState: TUserState = {
@@ -17,90 +17,89 @@ export const userSlice = createSlice({
   reducers: {
     /** Удаление данных о пользователе и его авторизации */
     deleteUser: (state) => {
-      console.log('delUser');
-      state.isAuthenticated = false; // user не аутентифицирован
-      state.user = null; // сброс текущего user
-      state.error = null; // ошибок нет
+      state.isAuthenticated = false;
+      state.user = null;
+      state.error = null;
     }
   },
   extraReducers: (builder) => {
     builder
-      // РЕГИСТРАЦИЯ ПОЛЬЗОВАТЕЛЯ
-
-      // Перед регистрацией
+      //* РЕГИСТРАЦИЯ ПОЛЬЗОВАТЕЛЯ
       .addCase(registerUser.pending, (state) => {
-        state.isRequested = true; // регистрация запущена
-        state.isAuthenticated = false; // user не аутентифицирован
-        state.user = null; // сброс текущего user
-        state.error = null; // ошибок нет
-      })
-
-      // Регистрация завершена с ошибкой
-      .addCase(registerUser.rejected, (state, action) => {
-        state.isRequested = false; // регистрация не выполняется
-        state.error = action.error.message || 'Ошибка регистрации';
-        console.error(state.error);
-      })
-
-      // Регистрация  успешно завершена
-      .addCase(registerUser.fulfilled, (state, action) => {
-        state.isRequested = false; // регистрация не выполняется
-        if (action.payload.success) {
-          state.isAuthenticated = true; // регистрация ✅
-          state.user = action.payload.user; // передача данных пользователя
-        }
-      })
-
-      // АВТОРИЗАЦИЯ ПОЛЬЗОВАТЕЛЯ
-
-      // Перед авторизацией
-      .addCase(loginUser.pending, (state) => {
-        state.isRequested = true; // авторизация запущена
-        state.isAuthenticated = false; // user не аутентифицирован
+        state.isRequested = true;
+        state.isAuthenticated = false;
         state.user = null;
         state.error = null;
       })
-
-      // Аторизация завершена с ошибкой
-      .addCase(loginUser.rejected, (state, action) => {
-        state.isRequested = false; // авторизация не выполняется
-        state.error = action.error.message || 'Ошибка авторизации';
+      .addCase(registerUser.rejected, (state, action) => {
+        state.isRequested = false;
+        state.error = action.error.message || 'Ошибка регистрации';
         console.error(state.error);
       })
-
-      // Авторизация успешно пройдена
-      .addCase(loginUser.fulfilled, (state, action) => {
-        // console.log('payload', action.payload);
-        state.isRequested = false; // авторизация не выполняется
+      .addCase(registerUser.fulfilled, (state, action) => {
+        state.isRequested = false;
         if (action.payload.success) {
-          state.isAuthenticated = true; // авторизация ✅
+          state.isAuthenticated = true;
           state.user = action.payload.user;
         }
       })
 
-      //! LOGOUT ПОЛЬЗОВАТЕЛЯ
-
-      // Перед авторизацией
-      .addCase(logoutUser.pending, (state) => {
-        state.isRequested = true; // logout запущена
-        state.isAuthenticated = false; // user не аутентифицирован
+      //* АВТОРИЗАЦИЯ ПОЛЬЗОВАТЕЛЯ
+      .addCase(loginUser.pending, (state) => {
+        state.isRequested = true;
+        state.isAuthenticated = false;
         state.user = null;
         state.error = null;
       })
+      .addCase(loginUser.rejected, (state, action) => {
+        state.isRequested = false;
+        state.error = action.error.message || 'Ошибка авторизации';
+        console.error(state.error);
+      })
+      .addCase(loginUser.fulfilled, (state, action) => {
+        state.isRequested = false;
+        if (action.payload.success) {
+          state.isAuthenticated = true;
+          state.user = action.payload.user;
+        }
+      })
 
-      // Аторизация завершена с ошибкой
+      //* LOGOUT ПОЛЬЗОВАТЕЛЯ
+      .addCase(logoutUser.pending, (state) => {
+        state.isRequested = true;
+        state.isAuthenticated = false;
+        state.user = null;
+        state.error = null;
+      })
       .addCase(logoutUser.rejected, (state, action) => {
-        state.isRequested = false; // logout не выполняется
+        state.isRequested = false;
         state.error = action.error.message || 'Logout-ошибка';
         console.error(state.error);
       })
-
-      // Авторизация успешно пройдена
       .addCase(logoutUser.fulfilled, (state) => {
-        state.isRequested = false; // logout не выполняется
-      });
+        state.isRequested = false;
+      })
 
-    // TODO MatchError - обработка всех rejected в одном блоке ?
+      //* ИЗМЕНЕНИЕ ДАННЫХ ПОЛЬЗОВАТЕЛЯ
+      .addCase(updateUser.pending, (state) => {
+        state.isRequested = true;
+        state.isAuthenticated = false;
+        state.user = null;
+        state.error = null;
+      })
+      .addCase(updateUser.rejected, (state, action) => {
+        state.isRequested = false;
+        state.error =
+          action.error.message || 'Ошибка изменения данных пользователя';
+        console.error(state.error);
+      })
+      .addCase(updateUser.fulfilled, (state, action) => {
+        state.isRequested = false;
+        if (action.payload.success) {
+          state.isAuthenticated = true;
+          state.user = action.payload.user;
+        }
+      });
   },
   selectors: {
     /** Селектор статуса завершения авторизации/регистрации */

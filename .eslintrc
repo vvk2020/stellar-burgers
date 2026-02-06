@@ -59,6 +59,14 @@
       }
     ]
   },
+  "overrides": [
+    {
+      "files": ["*.stories.*", "*.story.*", ".storybook/**/*"],
+      "rules": {
+        "react/react-in-jsx-scope": "error"
+      }
+    }
+  ],
   "settings": {
     "react": {
       "version": "detect"
