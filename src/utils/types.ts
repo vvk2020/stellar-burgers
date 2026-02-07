@@ -27,7 +27,7 @@ export type TOrder = {
 };
 
 export type TOrdersData = {
-  orders: TOrder[];
+  orders?: TOrder[];
   total: number;
   totalToday: number;
 };
@@ -137,6 +137,10 @@ export type TOrdersState = TResponseDataWithRequestStatus<TOrdersResponse> & {
 
 /** STORE STATE КОНСТРУКТОРА БУРГЕРА */
 export interface IBurgerConstructorState {
-  bun: TConstructorIngredient | null;
+  bun: TConstructorIngredient | undefined;
   ingredients: TConstructorIngredient[];
 }
+
+export type TErrorResponse = TServerResponse<{
+  message: string;
+}>;

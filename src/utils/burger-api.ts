@@ -197,13 +197,23 @@ export const resetPasswordApi = (data: { password: string; token: string }) =>
       return Promise.reject(data);
     });
 
-/** АВТОРИЗОВАННОЕ ПОЛУЧЕНИЕ ДАННЫХ ПОЛЬЗОВАТЕЛЯ */
-export const getUserApi = () =>
-  fetchWithRefresh<TUserResponse>(`${URL}/auth/user`, {
-    headers: {
-      authorization: getCookie('accessToken')
-    } as HeadersInit
-  });
+/** АВТОРИЗОВАННОЕ ПОЛУЧЕНИЕ ДАННЫХ ПОЛЬЗОВАТЕЛЯ
+ * @returns {Promise<TUserResponse>} данные пользователя
+ */
+export const getUserApi = () => {
+  const accessToken = getCookie('accessToken');
+  return accessToken
+    ? fetchWithRefresh<TUserResponse>(`${URL}/auth/user`, {
+        headers: {
+          authorization: accessToken
+        } as HeadersInit
+      })
+    : Promise.reject(
+        new Error(
+          'Ошибка запроса данных пользователя: access-токен отсутствует'
+        )
+      );
+};
 
 /** АВТОРИЗОВАННОЕ ИЗМЕНЕНИЕ ДАННЫХ ПОЛЬЗОВАТЕЛЯ
  * @param {{ password: string; token: string }} data - пароль и токен

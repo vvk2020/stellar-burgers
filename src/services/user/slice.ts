@@ -1,6 +1,12 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { TUserState } from '../../utils/types';
-import { loginUser, logoutUser, registerUser, updateUser } from './actions';
+import {
+  getUser,
+  loginUser,
+  logoutUser,
+  registerUser,
+  updateUser
+} from './actions';
 
 /** НАЧАЛЬНЫЙ STATE ПОЛЬЗОВАТЕЛЯ */
 const initialState: TUserState = {
@@ -94,6 +100,27 @@ export const userSlice = createSlice({
         console.error(state.error);
       })
       .addCase(updateUser.fulfilled, (state, action) => {
+        state.isRequested = false;
+        if (action.payload.success) {
+          state.isAuthenticated = true;
+          state.user = action.payload.user;
+        }
+      })
+
+      //* ПОЛУЧЕНИЕ ДАННЫХ ПОЛЬЗОВАТЕЛЯ
+      .addCase(getUser.pending, (state) => {
+        state.isRequested = true;
+        state.isAuthenticated = false;
+        state.user = null;
+        state.error = null;
+      })
+      .addCase(getUser.rejected, (state, action) => {
+        state.isRequested = false;
+        state.error =
+          action.error.message || 'Ошибка получения данных пользователя';
+        console.error(state.error);
+      })
+      .addCase(getUser.fulfilled, (state, action) => {
         state.isRequested = false;
         if (action.payload.success) {
           state.isAuthenticated = true;

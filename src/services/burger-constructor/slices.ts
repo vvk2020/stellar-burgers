@@ -1,9 +1,13 @@
 import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { IBurgerConstructorState, TIngredient } from '@utils-types';
+import {
+  IBurgerConstructorState,
+  TConstructorIngredient,
+  TIngredient
+} from '@utils-types';
 import { v4 as uuidv4 } from 'uuid';
 
 const initialState: IBurgerConstructorState = {
-  bun: null,
+  bun: undefined,
   ingredients: []
 };
 
@@ -13,22 +17,33 @@ export const burgerConstructorSlice = createSlice({
   initialState,
   reducers: {
     /** Добавление ингредиента в конструктор */
-    addItem: (state, action: PayloadAction<TIngredient>) => {
-      switch (action.payload.type) {
-        case 'bun': {
-          state.bun = { ...action.payload, id: uuidv4() };
-          break;
+    addItem: {
+      // Генерация id для уникальности ингредиента (перед выполнением reducer)
+      prepare: (ingredient: TIngredient) => {
+        const id = uuidv4();
+        return {
+          payload: { ...ingredient, id }
+        };
+      },
+
+      reducer: (state, action: PayloadAction<TConstructorIngredient>) => {
+        const { type, id, ...ingredientData } = action.payload;
+        switch (type) {
+          case 'bun': {
+            // state.bun = { ...action.payload, id: uuidv4() };
+            state.bun = { ...ingredientData, type: 'bun' as const, id };
+            break;
+          }
+          case 'main':
+          case 'sauce': {
+            // В RTK push() можно, т.к. Immer создает новое иммутабельное state
+            //  на основе изменений в draft (черновике)
+            state.ingredients.push({ ...ingredientData, type, id });
+            break;
+          }
+          default:
+            console.error('Неизвестный тип ингредиента');
         }
-        case 'main':
-        case 'sauce': {
-          state.ingredients = [
-            ...state.ingredients,
-            { ...action.payload, id: uuidv4() }
-          ];
-          break;
-        }
-        default:
-          console.error('Неизвестный тип ингредиента');
       }
     },
     /** Удаление ингредиента из конструктора по его id */
@@ -93,7 +108,7 @@ export const burgerConstructorSlice = createSlice({
     },
     /** Очистка конструктора */
     clearConstructor: (state) => {
-      state.bun = null;
+      state.bun = undefined;
       state.ingredients = [];
     }
   },

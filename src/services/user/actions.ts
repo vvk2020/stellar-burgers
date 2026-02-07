@@ -1,5 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import {
+  getUserApi,
   loginUserApi,
   logoutApi,
   registerUserApi,
@@ -7,6 +8,7 @@ import {
 } from '../../utils/burger-api';
 import { deleteCookie, setCookie } from '../../utils/cookie';
 import { TLoginData, TRegisterData } from '../../utils/types';
+import { isErrorResponse } from '../../utils/types-guards';
 
 /** ASYNC ACTION РЕГИСТРАЦИИ ПОЛЬЗОВАТЕЛЯ НА СЕРВЕРЕ */
 export const registerUser = createAsyncThunk(
@@ -20,8 +22,10 @@ export const registerUser = createAsyncThunk(
         localStorage.setItem('refreshToken', resp.refreshToken);
       }
       return resp;
-    } catch (error: any) {
-      return Promise.reject(error.message || 'Ошибка регистрации');
+    } catch (error: unknown) {
+      return Promise.reject(
+        isErrorResponse(error) ? error.message : 'Ошибка регистрации'
+      );
     }
   }
 );
@@ -38,8 +42,10 @@ export const loginUser = createAsyncThunk(
         localStorage.setItem('refreshToken', resp.refreshToken);
       }
       return resp;
-    } catch (error: any) {
-      return Promise.reject(error.message || 'Ошибка регистрации');
+    } catch (error: unknown) {
+      return Promise.reject(
+        isErrorResponse(error) ? error.message : 'Ошибка авторризации'
+      );
     }
   }
 );
@@ -52,13 +58,22 @@ export const logoutUser = createAsyncThunk('user/logout', async () => {
     localStorage.clear(); // refreshToken
     deleteCookie('accessToken'); // accessToken
     return resp;
-  } catch (error: any) {
-    return Promise.reject(error.message || 'Logout-ошибка');
+  } catch (error: unknown) {
+    return Promise.reject(
+      isErrorResponse(error) ? error.message : 'Ошибка выхода из системы'
+    );
   }
 });
 
 /** ASYNC ACTION ИЗМЕНЕНИЯ ДАННЫХ ПОЛЬЗОВАТЕЛЯ */
 export const updateUser = createAsyncThunk(
-  'user/update',
+  'user/get',
   async (user: Partial<TRegisterData>) => updateUserApi(user)
+);
+
+/** ASYNC ACTION ПОЛУЧЕНИЯ ДАННЫХ ПОЛЬЗОВАТЕЛЯ
+ * @returns {Promise<TUserResponse>} данные пользователя
+ */
+export const getUser = createAsyncThunk('user/update', async () =>
+  getUserApi()
 );

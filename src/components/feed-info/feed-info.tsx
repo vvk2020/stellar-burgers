@@ -1,7 +1,5 @@
-import { FC } from 'react';
-
 import { TOrder } from '@utils-types';
-
+import { FC } from 'react';
 import {
   selectFeedsOrders,
   selectFeedsStat

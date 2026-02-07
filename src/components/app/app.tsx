@@ -17,6 +17,8 @@ import '../../index.css';
 import { fetchIngredients } from '../../services/ingredients/actions';
 import { selectIngredientsRequestState } from '../../services/ingredients/slices';
 import { useAppDispatch, useAppSelector } from '../../services/store';
+import { getUser } from '../../services/user/actions';
+import { selectUser } from '../../services/user/slice';
 import { ProtectedRoute } from '../protected-route';
 import styles from './app.module.css';
 
@@ -25,16 +27,21 @@ const App = () => {
   const location = useLocation();
   const dispatch = useAppDispatch();
   const isIngredientsRequested = useAppSelector(selectIngredientsRequestState); // ингредиенты загружаются?
+  const user = useAppSelector(selectUser); // данные пользователя
 
   useEffect(() => {
     dispatch(fetchIngredients()); // запрос всех ингредиентов
   }, []);
 
+  // Запрос данных пользователя (если есть access token)
+  useEffect(() => {
+    if (!user) dispatch(getUser()); // запрос данных пользователя
+  }, [user]);
+
   const background = location.state?.background; // location предыдущего маршрута
 
   // Handler возврата на предыдущий маршрут при закрытии Modal
   const onClose = () => navigate(-1);
-
   return (
     <>
       <div className={styles.app}>
