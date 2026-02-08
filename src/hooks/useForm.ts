@@ -1,3 +1,4 @@
+// src\hooks\useForm.ts
 import { SetStateAction, SyntheticEvent, useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -8,7 +9,7 @@ interface UseFormProps<T> {
   resetOnSuccess?: boolean;
 }
 
-export function useForm<T extends Record<string, any>>({
+export function useForm<T extends Record<string, unknown>>({
   initialValues,
   onSubmit,
   validateOnSubmit = false,
@@ -87,11 +88,11 @@ export function useForm<T extends Record<string, any>>({
   // Создаем сеттеры для каждого поля формы
   const createFieldSetters = useCallback(() => {
     const setters: { [K in keyof T]: (value: SetStateAction<T[K]>) => void } =
-      {} as any;
+      {} as { [K in keyof T]: (value: SetStateAction<T[K]>) => void };
 
-    Object.keys(initialValues).forEach((key) => {
-      setters[key as keyof T] = (value: SetStateAction<any>) =>
-        updateField(key as keyof T, value);
+    (Object.keys(initialValues) as Array<keyof T>).forEach((key) => {
+      setters[key] = (value: SetStateAction<T[typeof key]>) =>
+        updateField(key, value);
     });
 
     return setters;
@@ -106,12 +107,14 @@ export function useForm<T extends Record<string, any>>({
       if (validateOnSubmit) {
         // Базовая валидация - проверка заполненности обязательных полей
         const newErrors: Partial<Record<keyof T, string>> = {};
-        Object.entries(values).forEach(([key, value]) => {
-          if (!value && key !== 'password') {
-            // password может быть пустым в некоторых случаях
-            newErrors[key as keyof T] = 'Это поле обязательно для заполнения';
+        (Object.entries(values) as Array<[keyof T, unknown]>).forEach(
+          ([key, value]) => {
+            if (!value && key !== 'password') {
+              // password может быть пустым в некоторых случаях
+              newErrors[key] = 'Это поле обязательно для заполнения';
+            }
           }
-        });
+        );
 
         if (Object.keys(newErrors).length > 0) {
           setErrors(newErrors);
@@ -125,8 +128,10 @@ export function useForm<T extends Record<string, any>>({
         if (resetOnSuccess) {
           resetForm();
         }
-      } catch (error: any) {
-        setSubmitError(error.message || 'Произошла ошибка');
+      } catch (error) {
+        const errorMessage =
+          error instanceof Error ? error.message : 'Произошла ошибка';
+        setSubmitError(errorMessage);
       } finally {
         setIsSubmitting(false);
       }
