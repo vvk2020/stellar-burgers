@@ -1,25 +1,29 @@
-import { FC, SyntheticEvent, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-
 import { resetPasswordApi } from '@api';
 import { ResetPasswordUI } from '@ui-pages';
+import { FC, useEffect, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useForm } from '../../hooks/useForm';
 
 export const ResetPassword: FC = () => {
   const navigate = useNavigate();
-  const [password, setPassword] = useState('');
-  const [token, setToken] = useState('');
-  const [error, setError] = useState<Error | null>(null);
 
-  const handleSubmit = (e: SyntheticEvent) => {
-    e.preventDefault();
-    setError(null);
-    resetPasswordApi({ password, token })
-      .then(() => {
-        localStorage.removeItem('resetPassword');
-        navigate('/login');
-      })
-      .catch((err) => setError(err));
-  };
+  const initialValues = useMemo(
+    () => ({
+      password: '',
+      token: ''
+    }),
+    []
+  );
+
+  const { values, submitError, handleSubmit, updateField } = useForm({
+    initialValues,
+    validateOnSubmit: true,
+    onSubmit: async ({ password, token }) => {
+      await resetPasswordApi({ password, token });
+      localStorage.removeItem('resetPassword');
+      navigate('/login');
+    }
+  });
 
   useEffect(() => {
     if (!localStorage.getItem('resetPassword')) {
@@ -27,13 +31,21 @@ export const ResetPassword: FC = () => {
     }
   }, [navigate]);
 
+  const handlePasswordChange = (value: string) => {
+    updateField('password', value);
+  };
+
+  const handleTokenChange = (value: string) => {
+    updateField('token', value);
+  };
+
   return (
     <ResetPasswordUI
-      errorText={error?.message}
-      password={password}
-      token={token}
-      setPassword={setPassword}
-      setToken={setToken}
+      errorText={submitError}
+      password={values.password}
+      token={values.token}
+      setPassword={handlePasswordChange}
+      setToken={handleTokenChange}
       handleSubmit={handleSubmit}
     />
   );

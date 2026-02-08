@@ -1,14 +1,14 @@
-import { useState, useRef, useEffect, FC } from 'react';
-import { useInView } from 'react-intersection-observer';
-
 import { TTabMode } from '@utils-types';
+import { FC, useEffect, useRef, useState } from 'react';
+import { useInView } from 'react-intersection-observer';
+import { useIngredientsByType } from '../../hooks/useIngredientsByType';
 import { BurgerIngredientsUI } from '../ui/burger-ingredients';
 
 export const BurgerIngredients: FC = () => {
-  /** TODO: взять переменные из стора */
-  const buns = [];
-  const mains = [];
-  const sauces = [];
+  // Ингредиенты по типам
+  const buns = useIngredientsByType('bun');
+  const mains = useIngredientsByType('main');
+  const sauces = useIngredientsByType('sauce');
 
   const [currentTab, setCurrentTab] = useState<TTabMode>('bun');
   const titleBunRef = useRef<HTMLHeadingElement>(null);
@@ -27,13 +27,18 @@ export const BurgerIngredients: FC = () => {
     threshold: 0
   });
 
+  // Важем порядок проверки ингредиентов при активации вкладки
+  // (исправление ошибки скачка на соусы при клике по начинкам)
   useEffect(() => {
+    // сначала проверка булок
     if (inViewBuns) {
       setCurrentTab('bun');
-    } else if (inViewSauces) {
-      setCurrentTab('sauce');
     } else if (inViewFilling) {
+      // затем начинки
       setCurrentTab('main');
+    } else if (inViewSauces) {
+      // и лишь потом соусы
+      setCurrentTab('sauce');
     }
   }, [inViewBuns, inViewFilling, inViewSauces]);
 
@@ -46,8 +51,6 @@ export const BurgerIngredients: FC = () => {
     if (tab === 'sauce')
       titleSaucesRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
-
-  return null;
 
   return (
     <BurgerIngredientsUI

@@ -1,13 +1,15 @@
-import { OrderCardUI } from '@ui';
 import type { Meta, StoryObj } from '@storybook/react';
+import { OrderCardUI } from '@ui';
+import bunImage from './assets/bun-01-mobile.png';
+import meatImage from './assets/meat-02-mobile.png';
+import mineralRingsImage from './assets/mineral_rings-mobile.png';
+import souceImage from './assets/sauce-02-mobile.png';
 
 const meta = {
   title: 'Example/OrderCard',
   component: OrderCardUI,
-  // This component will have an automatically generated Autodocs entry: https://storybook.js.org/docs/writing-docs/autodocs
   tags: ['autodocs'],
   parameters: {
-    // More on how to position stories at: https://storybook.js.org/docs/configure/story-layout
     layout: 'fullscreen'
   }
 } satisfies Meta<typeof OrderCardUI>;
@@ -28,9 +30,9 @@ export const DefaultOrderCard: Story = {
           carbohydrates: 22,
           calories: 33,
           price: 123,
-          image: '',
-          image_large: '',
-          image_mobile: ''
+          image: meatImage,
+          image_large: meatImage,
+          image_mobile: meatImage
         }
       ],
       ingredientsToShow: [
@@ -43,9 +45,22 @@ export const DefaultOrderCard: Story = {
           carbohydrates: 22,
           calories: 33,
           price: 123,
-          image: '',
-          image_large: '',
-          image_mobile: ''
+          image: bunImage,
+          image_large: bunImage,
+          image_mobile: bunImage
+        },
+        {
+          _id: '111',
+          name: 'Булка',
+          type: 'top',
+          proteins: 12,
+          fat: 33,
+          carbohydrates: 22,
+          calories: 33,
+          price: 123,
+          image: mineralRingsImage,
+          image_large: mineralRingsImage,
+          image_mobile: mineralRingsImage
         },
         {
           _id: '111',
@@ -56,9 +71,35 @@ export const DefaultOrderCard: Story = {
           carbohydrates: 22,
           calories: 33,
           price: 123,
-          image: '',
-          image_large: '',
-          image_mobile: ''
+          image: souceImage,
+          image_large: souceImage,
+          image_mobile: souceImage
+        },
+        {
+          _id: '111',
+          name: 'Начинка',
+          type: 'top',
+          proteins: 12,
+          fat: 33,
+          carbohydrates: 22,
+          calories: 33,
+          price: 123,
+          image: meatImage,
+          image_large: meatImage,
+          image_mobile: meatImage
+        },
+        {
+          _id: '111',
+          name: 'Булка',
+          type: 'top',
+          proteins: 12,
+          fat: 33,
+          carbohydrates: 22,
+          calories: 33,
+          price: 123,
+          image: bunImage,
+          image_large: bunImage,
+          image_mobile: bunImage
         }
       ],
       remains: 2,

@@ -1,8 +1,8 @@
 import { FC, memo, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 
-import { TModalProps } from './type';
 import { ModalUI } from '@ui';
+import { TModalProps } from './type';
 
 const modalRoot = document.getElementById('modals');
 
@@ -12,6 +12,8 @@ export const Modal: FC<TModalProps> = memo(({ title, onClose, children }) => {
       e.key === 'Escape' && onClose();
     };
 
+    /* Вызов callback onClose при закрытии модального окна по Esc
+      (для возврата к предыдущему маршруту) */
     document.addEventListener('keydown', handleEsc);
     return () => {
       document.removeEventListener('keydown', handleEsc);

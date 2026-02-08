@@ -1,21 +1,57 @@
-import { FC, useMemo } from 'react';
-import { Preloader } from '../ui/preloader';
-import { OrderInfoUI } from '../ui/order-info';
 import { TIngredient } from '@utils-types';
+import { FC, useEffect, useMemo } from 'react';
+import { useLocation, useParams } from 'react-router-dom';
+import { fetchFeedsOrder } from '../../services/feeds/actions';
+import {
+  requestFeedsOrderByNumber,
+  selectFeedsOrderByNumber,
+  selectFeedsOrders,
+  selectFeedsRequestStatus
+} from '../../services/feeds/slices';
+import { selectIngredients } from '../../services/ingredients/slices';
+import { selectUserOrderByNumber } from '../../services/orders/slices';
+import { useAppDispatch, useAppSelector } from '../../services/store';
+import { OrderInfoUI } from '../ui/order-info';
+import { Preloader } from '../ui/preloader';
 
 export const OrderInfo: FC = () => {
-  /** TODO: взять переменные orderData и ingredients из стора */
-  const orderData = {
-    createdAt: '',
-    ingredients: [],
-    _id: '',
-    status: '',
-    name: '',
-    updatedAt: 'string',
-    number: 0
-  };
+  // Если background в location.state, то OrderInfo в модальном окне
+  const location = useLocation();
+  const dispatch = useAppDispatch();
+  const isModalMode = !!location.state?.background;
+  // Номер заказа из маршрута
+  const { number } = useParams<{ number: string }>();
+  const orderNumber = number ? parseInt(number, 10) : 0;
 
-  const ingredients: TIngredient[] = [];
+  const feeedsOrders = useAppSelector(selectFeedsOrders);
+  const isFeeedsOrdersRequested = useAppSelector(selectFeedsRequestStatus);
+
+  // Выбор заказа по его номеру orderNumber
+  const orderData = useAppSelector((state) => {
+    // Если заказ в модальном окне, то он выбирается в зависимости от маршрута
+    // (заказы ленты - из feedsSlice, пользователя - из ordersSlice)
+    if (isModalMode) {
+      return location.pathname.includes('/profile/orders/')
+        ? selectUserOrderByNumber(state, orderNumber)
+        : selectFeedsOrderByNumber(state, orderNumber);
+    }
+    // Если заказ открыт по прямой ссылке (store пустой), то запрос с сервера + select из feedsSlice
+    return requestFeedsOrderByNumber(state);
+  });
+
+  // Если переход по прямой ссылке из ленты заказов, то запрос заказа с сервера
+  useEffect(() => {
+    if (
+      location.pathname.includes('/feed/') &&
+      !isModalMode &&
+      !isFeeedsOrdersRequested
+    ) {
+      dispatch(fetchFeedsOrder(orderNumber));
+    }
+  }, []);
+
+  // Ингредиенты
+  const ingredients = useAppSelector(selectIngredients); // ингредиенты
 
   /* Готовим данные для отображения */
   const orderInfo = useMemo(() => {
@@ -63,5 +99,5 @@ export const OrderInfo: FC = () => {
     return <Preloader />;
   }
 
-  return <OrderInfoUI orderInfo={orderInfo} />;
+  return <OrderInfoUI orderInfo={orderInfo} isModal={isModalMode} />;
 };

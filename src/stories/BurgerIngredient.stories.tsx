@@ -1,6 +1,9 @@
-import React from 'react';
-import { BurgerIngredientUI } from '@ui';
 import type { Meta, StoryObj } from '@storybook/react';
+import { BurgerIngredientUI } from '@ui';
+import React from 'react';
+import saladImage from './assets/salad-large.png';
+
+console.log(React.version);
 
 const meta = {
   title: 'Example/BurgerIngredient',
@@ -34,9 +37,9 @@ export const DefaultIngredient: Story = {
       carbohydrates: 22,
       calories: 33,
       price: 123,
-      image: '',
-      image_large: '',
-      image_mobile: ''
+      image: saladImage,
+      image_large: saladImage,
+      image_mobile: saladImage
     },
     count: 2,
     locationState: {
