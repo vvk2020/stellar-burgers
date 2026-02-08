@@ -2,6 +2,7 @@
 import { SetStateAction, SyntheticEvent, useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+/** ХУК УНИВЕРСАЛЬНОЙ ОБРАБОТКИ ФОРМ */
 interface UseFormProps<T> {
   initialValues: T;
   onSubmit: (values: T) => Promise<void> | void;
