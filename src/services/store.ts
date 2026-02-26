@@ -6,7 +6,7 @@ import { ingredientsSlice } from './ingredients/slices';
 import { ordersSlice } from './orders/slices';
 import { userSlice } from './user/slice';
 
-const rootReducer = combineSlices(
+export const rootReducer = combineSlices(
   ingredientsSlice, // ингредиенты
   burgerConstructorSlice, // конструктор бургера
   userSlice, // пользователь
