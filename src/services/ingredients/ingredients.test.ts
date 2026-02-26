@@ -50,7 +50,7 @@ describe('ПРОВЕРКА ASYNC-РЕДЮСЕРА СЛАЙСА ЛЕНТЫ ИНГ
     }
   ];
 
-  test('Контроль статуса запроса ингредиентов [isRequested]', async () => {
+  test('Контроль статуса запроса ингредиентов', async () => {
     // Контролируемый Promise
     let resolvePromise: (value: any) => void;
     const promise = new Promise((resolve) => {
@@ -101,54 +101,54 @@ describe('ПРОВЕРКА ASYNC-РЕДЮСЕРА СЛАЙСА ЛЕНТЫ ИНГ
     expect(state.ingredients.error).toBeNull();
   });
 
-  // test('Контроль статуса запроса ингредиентов [isRequested]', async () => {
-  //   // Контролируемый Promise
-  //   let resolvePromise: (value: any) => void;
-  //   const promise = new Promise((resolve) => {
-  //     resolvePromise = resolve;
-  //   });
+  test('Тест сохранения в store ингредиентов, полученных из запроса', async () => {
+    // Контролируемый Promise
+    let resolvePromise: (value: any) => void;
+    const promise = new Promise((resolve) => {
+      resolvePromise = resolve;
+    });
 
-  //   // Подмена fetch() с контролируемым промисом
-  //   // (формат ответа getIngredientsApi() - { success: true, data: TIngredient[] })
-  //   global.fetch = jest.fn(() =>
-  //     Promise.resolve({
-  //       ok: true,
-  //       json: () => promise
-  //     })
-  //   ) as jest.Mock;
+    // Подмена fetch() с контролируемым промисом
+    // (формат ответа getIngredientsApi() - { success: true, data: TIngredient[] })
+    global.fetch = jest.fn(() =>
+      Promise.resolve({
+        ok: true,
+        json: () => promise
+      })
+    ) as jest.Mock;
 
-  //   const store = configureStore({
-  //     reducer: { ingredients: ingredientsSlice.reducer }
-  //   });
+    const store = configureStore({
+      reducer: { ingredients: ingredientsSlice.reducer }
+    });
 
-  //   // Проверка isRequested ДО запуска fetchIngredients()
-  //   let state = store.getState();
-  //   expect(state.ingredients.isRequested).toBe(false);
-  //   expect(state.ingredients.data).toEqual([]);
-  //   expect(state.ingredients.error).toBeNull();
+    // Проверка isRequested ДО запуска fetchIngredients()
+    let state = store.getState();
+    expect(state.ingredients.isRequested).toBe(false);
+    expect(state.ingredients.data).toEqual([]);
+    expect(state.ingredients.error).toBeNull();
 
-  //   // Запуск async fetchIngredients()
-  //   const dispatchPromise = store.dispatch(fetchIngredients());
+    // Запуск async fetchIngredients()
+    const dispatchPromise = store.dispatch(fetchIngredients());
 
-  //   // Проверка isRequested ДО завершения fetchIngredients()
-  //   state = store.getState();
-  //   expect(state.ingredients.isRequested).toBe(true);
-  //   expect(state.ingredients.data).toEqual([]);
-  //   expect(state.ingredients.error).toBeNull();
+    // Проверка isRequested ДО завершения fetchIngredients()
+    state = store.getState();
+    expect(state.ingredients.isRequested).toBe(true);
+    expect(state.ingredients.data).toEqual([]);
+    expect(state.ingredients.error).toBeNull();
 
-  //   // Завершение запроса с возвратом ожидаемых данных в правильном формате
-  //   resolvePromise!({
-  //     success: true,
-  //     data: expectedResult
-  //   });
+    // Завершение запроса с возвратом ожидаемых данных в правильном формате
+    resolvePromise!({
+      success: true,
+      data: expectedResult
+    });
 
-  //   // Ожидание завершения fetchIngredients()
-  //   await dispatchPromise;
+    // Ожидание завершения fetchIngredients()
+    await dispatchPromise;
 
-  //   // Проверяем isRequested ПОСЛЕ завершения fetchIngredients()
-  //   state = store.getState();
-  //   expect(state.ingredients.isRequested).toBe(false);
-  //   expect(state.ingredients.data).toEqual(expectedResult);
-  //   expect(state.ingredients.error).toBeNull();
-  // });
+    // Проверяем isRequested ПОСЛЕ завершения fetchIngredients()
+    state = store.getState();
+    expect(state.ingredients.isRequested).toBe(false);
+    expect(state.ingredients.data).toEqual(expectedResult);
+    expect(state.ingredients.error).toBeNull();
+  });
 });
