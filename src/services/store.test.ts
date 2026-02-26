@@ -5,7 +5,7 @@ import { ordersSlice } from './orders/slices';
 import { rootReducer } from './store';
 import { userSlice } from './user/slice';
 
-describe('ПРОВЕРКА ПРАВИЛЬНОЙ ИНИЦИАЛИЗАЦИИ rootReducer', () => {
+describe('ПРОВЕРКА ПРАВИЛЬНОЙ ИНИЦИАЛИЗАЦИИ [rootReducer]', () => {
   it('Тест наличия слайсов', () => {
     // Начальное состояние rootReducer
     const initialState = rootReducer(undefined, { type: '@@INIT' });
